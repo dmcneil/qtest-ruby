@@ -39,8 +39,27 @@ module QTest
 
     private
 
+    def with_auth_header(options={})
+      options[:headers] ||= {}
+      options[:headers].merge! auth_header
+      options
+    end
+
     def auth_header
       {'Authorization' => @token}
+    end
+
+    def decode_if_successful(response)
+      case response.code
+      when 200
+        decode_response_body(response.body)
+      else
+        yield response.code if block_given?
+      end
+    end
+
+    def decode_response_body(body)
+      JSON.parse(body, symbolize_names: true)
     end
   end
 end

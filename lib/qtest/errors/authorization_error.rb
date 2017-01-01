@@ -1,4 +1,4 @@
 module QTest
-  class AuthorizationError < StandardError
+  class AuthorizationError < Error
   end
 end
