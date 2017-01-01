@@ -1,6 +1,9 @@
 module QTest
   class Client
     include HTTParty
+    include Project
+    include Release
+    include TestRun
 
     attr_accessor :token
 
