@@ -37,17 +37,11 @@ module QTest
       @base_uri = uri
     end
 
-    private
-
-    def with_auth_header(options={})
-      options[:headers] ||= {}
-      options[:headers].merge! auth_header
-      options
-    end
-
     def auth_header
       {'Authorization' => @token}
     end
+
+    private
 
     def decode_if_successful(response)
       case response.code

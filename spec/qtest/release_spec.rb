@@ -1,29 +1,20 @@
 module QTest
   module Release
     def release(args={})
-      options = with_auth_header
-
+      options = {headers: auth_header}
       project_id = args[:project]
       release_id = args[:id]
       response = self.class.get("/api/v3/projects/#{project_id}/releases/#{release_id}", options)
 
-      case response.code
-      when 200
-        JSON.parse(response.body, symbolize_names: true)
-      end
+      decode_if_successful response
     end
 
     def releases(args={})
-      options = {
-        headers: auth_header
-      }
+      options = {headers: auth_header}
       project_id = args[:project]
       response = self.class.get("/api/v3/projects/#{project_id}/releases", options)
 
-      case response.code
-      when 200
-        JSON.parse(response.body, symbolize_names: true)
-      end
+      decode_if_successful response
     end
   end
 end
@@ -44,7 +35,7 @@ module QTest
 
     it 'should get a release by id' do
       stub_request(:get, "http://foo/api/v3/projects/1/releases/5")
-        .with(headers: {'Authorization' => 'foobar'})
+        .with(headers: @client.auth_header)
         .to_return(:status => 200, :body => "{}", :headers => {})
 
       expect(@client.release(project: 1, id: 5)).to eq({})
@@ -52,7 +43,7 @@ module QTest
 
     it 'should get releases for a project' do
       stub_request(:get, "http://foo/api/v3/projects/1/releases")
-        .with(headers: {'Authorization' => 'foobar'})
+        .with(headers: @client.auth_header)
         .to_return(:status => 200, :body => "[{}, {}]", :headers => {})
 
       expect(@client.releases(project: 1).count).to eq 2
