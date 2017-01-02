@@ -19,7 +19,7 @@ module QTest
       expect(@client.release(project: 1, id: 5)).to eq({})
     end
 
-    it 'should get releases for a project' do
+    it 'should get all releases for a project' do
       stub_request(:get, "http://foo/api/v3/projects/1/releases")
         .with(headers: @client.auth_header)
         .to_return(:status => 200, :body => "[{}, {}]", :headers => {})

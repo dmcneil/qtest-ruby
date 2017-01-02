@@ -4,6 +4,7 @@ module QTest
     include Project
     include Release
     include TestRun
+    include TestCycle
 
     attr_accessor :token
 
