@@ -35,15 +35,9 @@ module QTest
       def test_cycles(args={})
         options = {}
         if args[:test_cycle]
-          options[:query] = {
-            'parentId' => args[:test_cycle],
-            'parentType' => 'test-cycle'
-          }
+          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
         elsif args[:release]
-          options[:query] = {
-            'parentId' => args[:release],
-            'parentType' => 'release'
-          }
+          options[:query] = build_parent_query_param(args[:release], :release)
         end
 
         path = build_path('/api/v3/projects', args[:project], 'test-cycles')
@@ -82,15 +76,9 @@ module QTest
         }
 
         if args[:test_cycle]
-          options[:query] = {
-            'parentId' => args[:test_cycle],
-            'parentType' => 'test-cycle'
-          }
+          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
         elsif args[:release]
-          options[:query] = {
-            'parentId' => args[:release],
-            'parentType' => 'release'
-          }
+          options[:query] = build_parent_query_param(args[:release], :release)
           options[:body][:target_build_id] = args[:target_build]
         end
 
@@ -117,25 +105,36 @@ module QTest
       #
       # @return [QTest::TestCycle]
       def move_test_cycle(args={})
+        options = {}
+        if args[:test_cycle]
+          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+        elsif args[:release]
+          options[:query] = build_parent_query_param(args[:release], :release)
+        end
+
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
+        response = handle_response(self.class.put(path, options))
+        deserialize_response(response, QTest::TestCycle)
+      end
+
+      # Update a Test Cycle.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Cycle ID
+      #     * :project - The parent Project ID
+      #     * :name - The new name of the Test Cycle
+      #     * :description - A new description for the Test Cycle
+      #
+      # @return [QTest::TestCycle]
+      def update_test_cycle(args={})
         options = {
           headers: {'Content-Type' => 'application/json'},
-          body: {
-            name: args[:name],
-            description: args[:description]
-          }
+          body: {}
         }
 
-        if args[:test_cycle]
-          options[:query] = {
-            'parentId' => args[:test_cycle],
-            'parentType' => 'test-cycle'
-          }
-        elsif args[:release]
-          options[:query] = {
-            'parentId' => args[:release],
-            'parentType' => 'release'
-          }
-        end
+        options[:body][:name] = args[:name] if args[:name]
+        options[:body][:description] = args[:description] if args[:description]
 
         path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
         response = handle_response(self.class.put(path, options))

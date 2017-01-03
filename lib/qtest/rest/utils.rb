@@ -41,6 +41,24 @@ module QTest
         end
       end
 
+      # Build a request query parameter.
+      #
+      # ## Example
+      #
+      #     build_parent_query_param(5, :release)
+      #     #=> {'parentId' => 5, 'parentType' => 'release'}
+      #
+      # @param parent_id [Integer/String] id of the parent
+      # @param parent_type [Symbol/String] type of the parent
+      def build_parent_query_param(parent_id, parent_type)
+        parent_type = parent_type.to_s.gsub('_', '-') if parent_type.is_a? Symbol
+
+        {
+          'parentId' => parent_id,
+          'parentType' => parent_type
+        }
+      end
+
       # Handle a Response based on its status code.
       #
       # By default, the Response body is assumed to be parsed

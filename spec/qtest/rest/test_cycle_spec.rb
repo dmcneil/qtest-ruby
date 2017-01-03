@@ -98,6 +98,22 @@ module QTest
         expect(@client.move_test_cycle(id: 9, project: 1, release: 6)).to be_a QTest::TestCycle
       end
 
+      it 'should update a test cycle' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            body: "name=New%20name&description=New%20description"
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect(@client.update_test_cycle({
+          id: 9,
+          project: 1,
+          name: 'New name',
+          description: 'New description'
+        })).to be_a QTest::TestCycle
+      end
+
       it 'should delete a test cycle' do
         stub_request(:delete, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
           .with(
