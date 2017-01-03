@@ -14,33 +14,41 @@ module QTest
       include QTest::REST::TestCycle
       include QTest::REST::TestRun
 
-      attr_accessor :token
-
       def self.included(base)
         base.include HTTParty
       end
+
+      # The API token passed in the Authorization header after
+      # successfully using the `auth` method.
+      attr_accessor :token
 
       # Authenticate with the QTest REST API using credentials.
       #
       # If successful, an API token is returned and used on future
       # requests.
       #
-      # @param username [String] qTest username
-      # @param password [String] qTest password
-      def auth(username, password)
+      # ## options
+      #
+      #     * :username - qTest username
+      #     * :password - qTest password
+      #
+      # @param opts [Hash] qTest credentials
+      # @return [String] authorization token if successful
+      def auth(opts={})
         options = {
           headers: {
             'Content-Type' => 'application/x-www-form-urlencoded'
           },
           body: {
-            j_username: username,
-            j_password: password
-          }
+            j_username: opts[:username],
+            j_password: opts[:password]}
         }
 
-        response = self.class.post("/api/login", options)
+        response = self.class.post('/api/login', options)
         @token = handle_response(response, raw: true)
         self.class.send(:headers, {'Authorization' => @token})
+
+        @token
       end
     end
   end

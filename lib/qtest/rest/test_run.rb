@@ -4,7 +4,7 @@ module QTest
       include QTest::REST::Utils
 
       def test_run(args={})
-        path = build_path("/api/v3/projects", args[:project], "test-runs", args[:id])
+        path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::TestRun)
       end
@@ -28,15 +28,14 @@ module QTest
           }
         end
 
-        path = build_path("/api/v3/projects", args[:project], "test-runs")
+        path = build_path('/api/v3/projects', args[:project], 'test-runs')
         response = handle_response(self.class.get(path, options))
         deserialize_response(response, QTest::TestRun)
       end
 
       def execution_statuses(args={})
-        path = build_path("/api/v3/projects", args[:project], "test-runs/execution-statuses")
-        response = handle_response(self.class.get(path))
-
+        path = build_path('/api/v3/projects', args[:project], 'test-runs/execution-statuses')
+        handle_response(self.class.get(path))
       end
     end
   end

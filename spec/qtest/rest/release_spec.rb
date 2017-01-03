@@ -22,9 +22,9 @@ module QTest
       end
 
       it 'should get all releases for a project' do
-        stub_request(:get, "http://www.foo.com/api/v3/projects/1/releases")
+        stub_request(:get, 'http://www.foo.com/api/v3/projects/1/releases')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(:status => 200, :body => "[{}, {}]", :headers => {})
+          .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
 
         expect(@client.releases(project: 1).count).to eq 2
       end

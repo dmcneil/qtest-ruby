@@ -61,7 +61,9 @@ module QTest
             decode_response_body(response.body)
           end
         when 401
-          raise AuthorizationError, response.body
+          raise QTest::AuthorizationError, response.body
+        else
+          raise QTest::Error, response.body
         end
       end
 

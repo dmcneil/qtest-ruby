@@ -14,18 +14,18 @@ module QTest
       end
 
       it 'should get a project by id' do
-        stub_request(:get, "http://www.foo.com/api/v3/projects/1")
+        stub_request(:get, 'http://www.foo.com/api/v3/projects/1')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(:status => 200, :body => "{}", :headers => {})
+          .to_return(:status => 200, :body => '{}', :headers => {})
 
         expect(@client.project(1)).to be_a QTest::Project
       end
 
       it 'should get all projects' do
-        stub_request(:get, "http://www.foo.com/api/v3/projects")
+        stub_request(:get, 'http://www.foo.com/api/v3/projects')
           .with(headers: {'Authorization' => 'foobar'})
           .to_return(:status => 200,
-                     :body => "[{},{}]",
+                     :body => '[{},{}]',
                      :headers => {})
 
         projects = @client.projects

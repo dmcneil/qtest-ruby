@@ -8,7 +8,7 @@ module QTest
       # @param id [Integer] ID of the Project
       # @return [Project]
       def project(id)
-        path = build_path("/api/v3", :projects, id)
+        path = build_path('/api/v3', :projects, id)
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::Project)
       end
@@ -17,7 +17,7 @@ module QTest
       #
       # @return [Array::Project]
       def projects
-        path = build_path("/api/v3", :projects)
+        path = build_path('/api/v3', :projects)
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::Project)
       end

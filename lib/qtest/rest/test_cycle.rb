@@ -4,7 +4,7 @@ module QTest
       include QTest::REST::Utils
 
       def test_cycle(args={})
-        path = build_path("/api/v3/projects", args[:project], "test-cycles", args[:id])
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::TestCycle)
       end
@@ -23,7 +23,7 @@ module QTest
           }
         end
 
-        path = build_path("/api/v3/projects", args[:project], "test-cycles")
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
         response = handle_response(self.class.get(path, options))
         deserialize_response(response, QTest::TestCycle)
       end
@@ -50,7 +50,7 @@ module QTest
           }
         end
 
-        path = build_path("/api/v3/projects", args[:project], "test-cycles")
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
         response = handle_response(self.class.post(path, options))
         deserialize_response(response, QTest::TestCycle)
       end

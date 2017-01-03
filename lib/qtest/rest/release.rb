@@ -4,13 +4,13 @@ module QTest
       include QTest::REST::Utils
 
       def release(args={})
-        path = build_path("/api/v3/projects", args[:project], "releases", args[:id])
+        path = build_path('/api/v3/projects', args[:project], 'releases', args[:id])
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::Release)
       end
 
       def releases(args={})
-        path = build_path("/api/v3/projects", args[:project], "releases")
+        path = build_path('/api/v3/projects', args[:project], 'releases')
         response = handle_response(self.class.get(path))
         deserialize_response(response, QTest::Release)
       end
