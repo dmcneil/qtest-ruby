@@ -2,6 +2,7 @@ module QTest
   module REST
     module TestCycle
       include QTest::REST::Utils
+      include QTest::REST::CRUD
 
       # Get a Test Cycle by its ID.
       #
@@ -68,23 +69,20 @@ module QTest
       # @return [QTest::TestCycle]
       def create_test_cycle(args={})
         options = {
-          headers: {'Content-Type' => 'application/json'},
+          path: build_path('/api/v3/projects', args[:project], 'test-cycles'),
           body: {
             name: args[:name],
             description: args[:description]
           }
         }
-
         if args[:test_cycle]
-          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:release]
-          options[:query] = build_parent_query_param(args[:release], :release)
+          options[:query] = release_parent_query_param(args[:release])
           options[:body][:target_build_id] = args[:target_build]
         end
 
-        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
-        response = handle_response(self.class.post(path, options))
-        deserialize_response(response, QTest::TestCycle)
+        create(QTest::TestCycle, options)
       end
 
       # Move a Test Cycle to another container.

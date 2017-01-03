@@ -71,12 +71,41 @@ module QTest
         expect(test_runs[1]).to be_a QTest::TestRun
       end
 
+      it 'should create a test run under a release' do
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=release')
+          .with(body: 'name=Run%201&description=Create%20a%20run&test_case_version_id=5',
+                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        test_run = {
+          project: 1,
+          release: 2,
+          name: 'Run 1',
+          description: 'Create a run',
+          test_case: 5
+        }
+
+        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+      end
+
       it 'should get execution status values' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs/execution-statuses')
           .with(headers: {'Authorization' => 'foobar'})
           .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
 
         expect(@client.execution_statuses(project: 1).count).to eq 2
+      end
+
+      it 'should get test run fields' do
+        stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs/fields')
+          .with(headers: {'Authorization' => 'foobar'})
+          .to_return(status: 200, body: '[{"id": 1}, {"id": 2}]', headers: {})
+
+        fields = @client.test_run_fields(project: 1)
+
+        expect(fields.count).to be 2
+        expect(fields[0][:id]).to eq 1
+        expect(fields[1][:id]).to eq 2
       end
     end
   end

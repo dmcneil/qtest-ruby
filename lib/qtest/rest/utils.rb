@@ -59,6 +59,14 @@ module QTest
         }
       end
 
+      def release_parent_query_param(release_id)
+        build_parent_query_param(release_id, :release)
+      end
+
+      def test_cycle_parent_query_param(test_cycle_id)
+        build_parent_query_param(test_cycle_id, :test_cycle)
+      end
+
       # Handle a Response based on its status code.
       #
       # By default, the Response body is assumed to be parsed
