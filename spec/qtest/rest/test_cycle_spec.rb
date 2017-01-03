@@ -64,10 +64,68 @@ module QTest
           release: 2,
           name: 'Cycle 1',
           description: 'Create a foo cycle',
-          target_build_id: 15332
+          target_build: 15332
         }
 
         expect(@client.create_test_cycle(test_cycle)).to be_a QTest::TestCycle
+      end
+
+      it 'should move a test cycle to another test cycle' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            query: {
+              'parentId' => 4,
+              'parentType' => 'test-cycle'
+            }
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect(@client.move_test_cycle(id: 9, project: 1, test_cycle: 4)).to be_a QTest::TestCycle
+      end
+
+      it 'should move a test cycle to another release' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            query: {
+              'parentId' => 6,
+              'parentType' => 'release'
+            }
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect(@client.move_test_cycle(id: 9, project: 1, release: 6)).to be_a QTest::TestCycle
+      end
+
+      it 'should delete a test cycle' do
+        stub_request(:delete, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            query: {
+              force: false
+            }
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect {
+          @client.delete_test_cycle(id: 9, project: 1)
+        }.to_not raise_error
+      end
+
+      it 'should force delete a test cycle' do
+        stub_request(:delete, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            query: {
+              force: true
+            }
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect {
+          @client.delete_test_cycle(id: 9, project: 1, force: true)
+        }.to_not raise_error
       end
     end
   end
