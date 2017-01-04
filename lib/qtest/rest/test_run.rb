@@ -4,51 +4,156 @@ module QTest
       include QTest::REST::Utils
       include QTest::REST::CRUD
 
+      # Get a Test Run by its ID.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Run ID
+      #     * :project - The parent Project ID
+      #
+      # @return [QTest::TestRun]
       def test_run(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
-        response = handle_response(self.class.get(path))
-        deserialize_response(response, QTest::TestRun)
+        read(QTest::TestRun, path: path)
       end
 
+      # Get a collection of Test Runs.
+      #
+      # ## Options
+      #
+      #     * :project - The parent Project ID
+      #
+      #     * :test_cycle - The parent Test Cycle ID
+      #     # OR
+      #     * :release - The parent Release ID
+      #     # OR
+      #     * :test_suite - The parent Test Suite ID
+      #
+      # @return [Array[QTest::TestRun]
       def test_runs(args={})
         options = {}
         if args[:release]
-          options[:query] = build_parent_query_param(args[:release], :release)
+          options[:query] = release_parent_query_param(args[:release])
         elsif args[:test_cycle]
-          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:test_suite]
-          options[:query] = build_parent_query_param(args[:test_suite], :test_suite)
+          options[:query] = test_suite_parent_query_param(args[:test_suite])
         end
 
-        path = build_path('/api/v3/projects', args[:project], 'test-runs')
-        response = handle_response(self.class.get(path, options))
-        deserialize_response(response, QTest::TestRun)
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs')
+        read(QTest::TestRun, options)
       end
 
+      # Create a new Test Run.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Run ID
+      #     * :project - The parent Project ID
+      #     * :name - The name of the Test Run
+      #
+      #     * :test_cycle - The parent Test Cycle ID
+      #     # OR
+      #     * :release - The parent Release ID
+      #     # OR
+      #     * :test_suite - The parent Test Suite ID
+      #
+      # Only the `:test_cycle` or `:release` option need be passed. If for
+      # whatever reason both are supplied, the `:test_cycle` takes precedence.
+      #
+      # @return [QTest::TestRun]
       def create_test_run(args={})
         options = {
           path: build_path('/api/v3/projects', args[:project], 'test-runs'),
           body: {
             name: args[:name],
-            description: args[:description]
+            test_case: {}
           }
         }
-        options[:body][:test_case_version_id] = args[:test_case] if args[:test_case]
+
+        if args[:test_case]
+          options[:body][:test_case] = args[:test_case]
+        end
         options[:query] = release_parent_query_param(args[:release]) if args[:release]
-        options[:query] = release_parent_query_param(args[:test_cycle]) if args[:test_cycle]
-        options[:query] = release_parent_query_param(args[:test_suite]) if args[:test_suite]
+        options[:query] = test_cycle_parent_query_param(args[:test_cycle]) if args[:test_cycle]
+        options[:query] = test_suite_parent_query_param(args[:test_suite]) if args[:test_suite]
 
         create(QTest::TestRun, options)
       end
 
+      # Move a Test Run to another container.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Run ID
+      #     * :project - The parent Project ID
+      #     * :name - The name of the Test Run
+      #     * :description - A description for the Test Run
+      #
+      #     * :test_cycle - The parent Test Cycle ID
+      #     # OR
+      #     * :release - The parent Release ID
+      #     # OR
+      #     * :test_suite - The parent Test Suite ID
+      #
+      # @return [QTest::TestRun]
+      def move_test_run(args={})
+        options = {}
+
+        if args[:test_cycle]
+          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+        elsif args[:release]
+          options[:query] = build_parent_query_param(args[:release], :release)
+        elsif args[:test_suite]
+          options[:query] = build_parent
+        end
+
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
+        update(QTest::TestRun, options)
+      end
+
+      # Update a Test Run.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Run ID
+      #     * :project - The parent Project ID
+      #     * :name - The new name of the Test Run
+      #     * :description - A new description for the Test Run
+      #
+      # @return [QTest::TestRun]
+      def update_test_run(args={})
+        options = {
+          body: {}
+        }
+
+        options[:body][:name] = args[:name] if args[:name]
+        options[:body][:description] = args[:description] if args[:description]
+
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
+        update(QTest::TestRun, options)
+      end
+
+      # Delete a Test Run.
+      #
+      # ## Options
+      #
+      #     * :id - The Test Run ID
+      #     * :project - The parent Project ID
+      #
+      def delete_test_run(args={})
+        path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
+        delete(path: path)
+      end
+
       def execution_statuses(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/execution-statuses')
-        handle_response(self.class.get(path))
+        read(Hash, path: path)
       end
 
       def test_run_fields(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/fields')
-        handle_response(self.class.get(path))
+        read(Hash, path: path)
       end
     end
   end

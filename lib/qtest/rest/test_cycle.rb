@@ -14,20 +14,18 @@ module QTest
       # @return [QTest::TestCycle]
       def test_cycle(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        response = handle_response(self.class.get(path))
-        deserialize_response(response, QTest::TestCycle)
+        read(QTest::TestCycle, path: path)
       end
 
       # Get a collection of Test Cycles.
       #
       # ## Options
       #
-      #     * :id - The Test Cycle ID
       #     * :project - The parent Project ID
       #
-      #     * :test_cycle - The parent Test Cycle
+      #     * :test_cycle - The parent Test Cycle ID
       #     # OR
-      #     * :release - The parent Release
+      #     * :release - The parent Release ID
       #
       # Only the `:test_cycle` or `:release` option need be passed. If for
       # whatever reason both are supplied, the `:test_cycle` takes precedence.
@@ -36,14 +34,13 @@ module QTest
       def test_cycles(args={})
         options = {}
         if args[:test_cycle]
-          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:release]
-          options[:query] = build_parent_query_param(args[:release], :release)
+          options[:query] = release_parent_query_param(args[:release])
         end
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles')
 
-        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
-        response = handle_response(self.class.get(path, options))
-        deserialize_response(response, QTest::TestCycle)
+        read(QTest::TestCycle, options)
       end
 
       # Create a new Test Cycle.
@@ -54,11 +51,11 @@ module QTest
       #     * :project - The parent Project ID
       #     * :name - The name of the Test Cycle
       #     * :description - A description for the Test Cycle
-      #     * :test_cycle - The parent Test Cycle ID
       #
-      #     * :target_build - The target build ID
+      #     * :test_cycle - The parent Test Cycle ID
       #     # OR
       #     * :release - The parent Release ID
+      #     * :target_build - The target build ID
       #
       # Only the `:test_cycle` or `:release` option need be passed. If for
       # whatever reason both are supplied, the `:test_cycle` takes precedence.
@@ -75,6 +72,7 @@ module QTest
             description: args[:description]
           }
         }
+
         if args[:test_cycle]
           options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:release]
@@ -104,15 +102,15 @@ module QTest
       # @return [QTest::TestCycle]
       def move_test_cycle(args={})
         options = {}
+
         if args[:test_cycle]
           options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
         elsif args[:release]
           options[:query] = build_parent_query_param(args[:release], :release)
         end
 
-        path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        response = handle_response(self.class.put(path, options))
-        deserialize_response(response, QTest::TestCycle)
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
+        update(QTest::TestCycle, options)
       end
 
       # Update a Test Cycle.
@@ -127,16 +125,14 @@ module QTest
       # @return [QTest::TestCycle]
       def update_test_cycle(args={})
         options = {
-          headers: {'Content-Type' => 'application/json'},
           body: {}
         }
 
         options[:body][:name] = args[:name] if args[:name]
         options[:body][:description] = args[:description] if args[:description]
 
-        path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        response = handle_response(self.class.put(path, options))
-        deserialize_response(response, QTest::TestCycle)
+        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
+        update(QTest::TestCycle, options)
       end
 
       # Delete a Test Cycle.
@@ -145,16 +141,11 @@ module QTest
       #
       #     * :id - The Test Cycle ID
       #     * :project - The parent Project ID
+      #     * :force - If true, delete all children of the Test Cycle
       #
       def delete_test_cycle(args={})
-        options = {
-          query: {
-            force: args[:force] || false
-          }
-        }
-
         path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        handle_response(self.class.delete(path, options), raw: true)
+        delete(path: path, query: {force: args[:force] || false})
       end
     end
   end

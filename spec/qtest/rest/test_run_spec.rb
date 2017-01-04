@@ -73,7 +73,7 @@ module QTest
 
       it 'should create a test run under a release' do
         stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=release')
-          .with(body: 'name=Run%201&description=Create%20a%20run&test_case_version_id=5',
+          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
                 headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
           .to_return(:status => 200, :body => '{}', :headers => {})
 
@@ -81,11 +81,89 @@ module QTest
           project: 1,
           release: 2,
           name: 'Run 1',
-          description: 'Create a run',
-          test_case: 5
+          test_case: {
+            test_case_version_id: 5
+          }
         }
 
         expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+      end
+
+      it 'should create a test run under a test cycle' do
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-cycle')
+          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
+                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        test_run = {
+          project: 1,
+          test_cycle: 2,
+          name: 'Run 1',
+          test_case: {
+            test_case_version_id: 5
+          }
+        }
+
+        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+      end
+
+      it 'should create a test run under a test suite' do
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-suite')
+          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
+                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        test_run = {
+          project: 1,
+          test_suite: 2,
+          name: 'Run 1',
+          test_case: {
+            test_case_version_id: 5
+          }
+        }
+
+        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+      end
+
+      it 'should move a test run to another release' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-runs/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            query: {
+              'parentId' => 6,
+              'parentType' => 'release'
+            }
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect(@client.move_test_run(id: 9, project: 1, release: 6)).to be_a QTest::TestRun
+      end
+
+      it 'should update a test run' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-runs/9')
+          .with(
+            headers: {'Authorization' => 'foobar'},
+            body: "name=New%20name"
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect(@client.update_test_run({
+          id: 9,
+          project: 1,
+          name: 'New name',
+        })).to be_a QTest::TestRun
+      end
+
+      it 'should delete a test run' do
+        stub_request(:delete, 'http://www.foo.com/api/v3/projects/1/test-runs/4')
+          .with(
+            headers: {'Authorization' => 'foobar'}
+          )
+          .to_return(:status => 200, :body => '{}', :headers => {})
+
+        expect {
+          @client.delete_test_run(id: 4, project: 1)
+        }.to_not raise_error
       end
 
       it 'should get execution status values' do

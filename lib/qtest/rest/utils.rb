@@ -34,9 +34,14 @@ module QTest
       def deserialize_response(json, klass)
         if json.is_a? Array
           json.map do |element|
-            klass.new(element)
+            if klass == Hash
+              element
+            else
+              klass.new(element)
+            end
           end
         elsif json.is_a? Hash
+          return json if klass == Hash
           klass.new(json)
         end
       end
@@ -65,6 +70,10 @@ module QTest
 
       def test_cycle_parent_query_param(test_cycle_id)
         build_parent_query_param(test_cycle_id, :test_cycle)
+      end
+
+      def test_suite_parent_query_param(test_suite_id)
+        build_parent_query_param(test_suite_id, :test_suite)
       end
 
       # Handle a Response based on its status code.
