@@ -5,7 +5,7 @@ module QTest
         options = {
           query: args[:query],
           headers: {'Content-Type' => 'application/json'},
-          body: args[:body]
+          body: args[:body].to_json
         }
 
         response = handle_response(self.class.post(args[:path], options))
@@ -24,7 +24,7 @@ module QTest
       def update(klass, args={})
         options = {
           headers: {'Content-Type' => 'application/json'},
-          body: args[:body]
+          body: args[:body].to_json
         }
 
         options[:query] = args[:query] if args[:query]

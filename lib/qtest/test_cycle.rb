@@ -8,17 +8,28 @@ module QTest
       @release = opts[:release]
     end
 
-    def test_run(opts={})
-      test_run = self.class.client.test_run(project: @project.id,
-                                            test_cycle: @id,
-                                            id: opts[:id])
+    def test_suites
+      test_suites = self.class.client.test_suites(project: @project.id,
+                                                 test_cycle: @id) || []
 
-      if test_run
-        test_run.project = @project
-        test_run.test_cycle = self
+      test_suites.map do |test_suite|
+        test_suite.project = @project
+        test_suite.test_cycle = self
+        test_suite
+      end
+    end
+
+    def create_test_suite(opts={})
+      test_suite = self.class.client.create_test_suite(project: @project.id,
+                                                       test_cycle: @id,
+                                                       name: opts[:name])
+
+      if test_suite
+        test_suite.project = @project
+        test_suite.test_cycle = self
       end
 
-      test_run
+      test_suite
     end
 
     def test_runs

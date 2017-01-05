@@ -4,6 +4,7 @@ require_relative 'project'
 require_relative 'release'
 require_relative 'test_cycle'
 require_relative 'test_run'
+require_relative 'test_suite'
 
 module QTest
   module REST
@@ -14,6 +15,7 @@ module QTest
       include QTest::REST::Release
       include QTest::REST::TestCycle
       include QTest::REST::TestRun
+      include QTest::REST::TestSuite
 
       def self.included(base)
         base.include HTTParty

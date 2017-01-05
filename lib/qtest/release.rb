@@ -7,27 +7,6 @@ module QTest
       @project = opts[:project]
     end
 
-    # Get a specific Test Cycle under the Release.
-    #
-    # ## Options
-    #
-    #     * :id - the Test Cycle ID
-    #
-    # @return [QTest::TestCycle]
-    def test_cycle(opts={})
-      test_cycle = self
-                   .class
-                   .client
-                   .test_cycle(project: @project.id, release: @id, id: opts[:id])
-
-      if test_cycle
-        test_cycle.release = self
-        test_cycle.project = @project
-      end
-
-      test_cycle
-    end
-
     # Get all Test Cycles under the Release.
     #
     # @return [Array[QTest::TestCycle]]

@@ -26,18 +26,6 @@ module QTest
         expect(test_cycles.first.release).to eq @release
         expect(test_cycles.first.project).to eq @project
       end
-
-      it 'should get a specific test cycle' do
-        expect(@client).to receive(:test_cycle)
-                           .with(project: 1, release: 5, id: 6)
-                           .and_return(@test_cycle)
-
-        test_cycle = @release.test_cycle(id: 6)
-
-        expect(test_cycle).to eq @test_cycle
-        expect(test_cycle.release).to eq @release
-        expect(test_cycle.project).to eq @project
-      end
     end
   end
 end

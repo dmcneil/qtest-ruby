@@ -73,8 +73,14 @@ module QTest
 
       it 'should create a test run under a release' do
         stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=release')
-          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
-                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+          .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
+                body: {
+                  name: 'Run 1',
+                  test_case: {
+                    test_case_version_id: 5
+                  }
+                }.to_json
+          )
           .to_return(:status => 200, :body => '{}', :headers => {})
 
         test_run = {
@@ -91,8 +97,14 @@ module QTest
 
       it 'should create a test run under a test cycle' do
         stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-cycle')
-          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
-                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+        .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
+              body: {
+                name: 'Run 1',
+                test_case: {
+                  test_case_version_id: 5
+                }
+              }.to_json
+          )
           .to_return(:status => 200, :body => '{}', :headers => {})
 
         test_run = {
@@ -109,8 +121,14 @@ module QTest
 
       it 'should create a test run under a test suite' do
         stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-suite')
-          .with(body: 'name=Run%201&test_case[test_case_version_id]=5',
-                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
+        .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
+              body: {
+                name: 'Run 1',
+                test_case: {
+                  test_case_version_id: 5
+                }
+              }.to_json
+          )
           .to_return(:status => 200, :body => '{}', :headers => {})
 
         test_run = {
@@ -143,7 +161,9 @@ module QTest
         stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-runs/9')
           .with(
             headers: {'Authorization' => 'foobar'},
-            body: "name=New%20name"
+            body: {
+              name: 'New name'
+            }.to_json
           )
           .to_return(:status => 200, :body => '{}', :headers => {})
 

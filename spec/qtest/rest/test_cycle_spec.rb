@@ -55,7 +55,11 @@ module QTest
 
       it 'should create a test cycle under a release' do
         stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-cycles?parentId=2&parentType=release')
-          .with(body: 'name=Cycle%201&description=Create%20a%20foo%20cycle&target_build_id=15332',
+          .with(body: {
+                  name: 'Cycle 1',
+                  description: 'Create a foo cycle',
+                  target_build_id: 15332
+                }.to_json,
                 headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
           .to_return(:status => 200, :body => '{}', :headers => {})
 
@@ -102,7 +106,10 @@ module QTest
         stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-cycles/9')
           .with(
             headers: {'Authorization' => 'foobar'},
-            body: "name=New%20name&description=New%20description"
+            body: {
+              name: 'New name',
+              description: 'New description'
+            }.to_json
           )
           .to_return(:status => 200, :body => '{}', :headers => {})
 
