@@ -20,8 +20,10 @@ module QTest
                    .client
                    .test_cycle(project: @project.id, release: @id, id: opts[:id])
 
-      test_cycle.release = self
-      test_cycle.project = @project
+      if test_cycle
+        test_cycle.release = self
+        test_cycle.project = @project
+      end
 
       test_cycle
     end
