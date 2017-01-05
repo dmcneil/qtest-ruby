@@ -13,5 +13,19 @@ module QTest
         expect(Client.base_uri).to eq 'http://www.foo.com'
       end
     end
+
+    describe 'defining the client on QTest::Base' do
+      it 'should define the client for the QTest::Base class' do
+        expect(QTest::Base).to respond_to :client
+      end
+
+      it 'should raise an error if no client has been created' do
+        QTest::Base.singleton_class.send(:undef_method, :client)
+
+        expect {
+          QTest::Base.client
+        }.to raise_error QTest::Error, 'No QTest::Client found. Create one using QTest::Client.new first.'
+      end
+    end
   end
 end

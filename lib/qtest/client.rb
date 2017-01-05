@@ -2,6 +2,10 @@ module QTest
   class Client
     include QTest::REST::API
 
+    def initialize(opts={})
+      define_base_client
+    end
+
     # Configure the Client.
     #
     # ## Example
@@ -22,6 +26,15 @@ module QTest
     def base_uri=(uri)
       self.class.send(:base_uri, uri)
       @base_uri = uri
+    end
+
+    private
+
+    def define_base_client
+      this = self
+      QTest::Base.send(:define_singleton_method, :client) do
+        this
+      end
     end
   end
 end

@@ -1,6 +1,7 @@
 require 'httparty'
 
 require_relative 'qtest/version'
+require_relative 'qtest/base'
 require_relative 'qtest/project'
 require_relative 'qtest/release'
 require_relative 'qtest/test_run'
