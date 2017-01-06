@@ -24,11 +24,12 @@ module QTest
       it 'should get all test suites for a release' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-suites')
                     .with(
-                    headers: {'Authorization' => 'foobar'},
-                    query: {
-                      'parentId' => 5,
-                      'parentType' => 'release'
-                    })
+                      headers: {'Authorization' => 'foobar'},
+                      query: {
+                        'parentId' => 5,
+                        'parentType' => 'release'
+                      }
+                    )
                     .to_return(status: 200, body: '[{}, {}]')
 
         test_suites = @client.test_suites(project: 1, release: 5)

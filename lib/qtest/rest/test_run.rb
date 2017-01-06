@@ -14,7 +14,7 @@ module QTest
       # @return [QTest::TestRun]
       def test_run(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
-        read(QTest::TestRun, path: path)
+        get(QTest::TestRun, path)
       end
 
       # Get a collection of Test Runs.
@@ -40,8 +40,8 @@ module QTest
           options[:query] = test_suite_parent_query_param(args[:test_suite])
         end
 
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs')
-        read(QTest::TestRun, options)
+        path = build_path('/api/v3/projects', args[:project], 'test-runs')
+        get(QTest::TestRun, path, options)
       end
 
       # Create a new Test Run.
@@ -64,7 +64,6 @@ module QTest
       # @return [QTest::TestRun]
       def create_test_run(args={})
         options = {
-          path: build_path('/api/v3/projects', args[:project], 'test-runs'),
           body: {
             name: args[:name],
             test_case: {}
@@ -74,11 +73,17 @@ module QTest
         if args[:test_case]
           options[:body][:test_case] = args[:test_case]
         end
-        options[:query] = release_parent_query_param(args[:release]) if args[:release]
-        options[:query] = test_cycle_parent_query_param(args[:test_cycle]) if args[:test_cycle]
-        options[:query] = test_suite_parent_query_param(args[:test_suite]) if args[:test_suite]
 
-        create(QTest::TestRun, options)
+        if args[:release]
+          options[:query] = release_parent_query_param(args[:release])
+        elsif args[:test_cycle]
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
+        elsif args[:test_suite]
+          options[:query] = test_suite_parent_query_param(args[:test_suite])
+        end
+
+        path = build_path('/api/v3/projects', args[:project], 'test-runs')
+        post(QTest::TestRun, path, options)
       end
 
       # Move a Test Run to another container.
@@ -101,15 +106,18 @@ module QTest
         options = {}
 
         if args[:test_cycle]
-          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:release]
-          options[:query] = build_parent_query_param(args[:release], :release)
+          options[:query] = release_parent_query_param(args[:release])
         elsif args[:test_suite]
-          options[:query] = build_parent
+          options[:query] = test_suite_parent_query_param(args[:test_suite])
         end
 
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
-        update(QTest::TestRun, options)
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-runs',
+                          args[:id])
+        put(QTest::TestRun, path, options)
       end
 
       # Update a Test Run.
@@ -128,10 +136,13 @@ module QTest
         }
 
         options[:body][:name] = args[:name] if args[:name]
-        options[:body][:description] = args[:description] if args[:description]
+        options[:body][:description] = args[:name] if args[:description]
 
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
-        update(QTest::TestRun, options)
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-runs',
+                          args[:id])
+        put(QTest::TestRun, path, options)
       end
 
       # Delete a Test Run.
@@ -143,17 +154,17 @@ module QTest
       #
       def delete_test_run(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
-        delete(path: path)
+        delete(path)
       end
 
       def execution_statuses(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/execution-statuses')
-        read(Hash, path: path)
+        get(Hash, path)
       end
 
       def test_run_fields(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/fields')
-        read(Hash, path: path)
+        get(Hash, path)
       end
     end
   end

@@ -18,7 +18,7 @@ module QTest
           .with(headers: {'Authorization' => 'foobar'})
           .to_return(:status => 200, :body => '{}', :headers => {})
 
-        expect(@client.project(1)).to be_a QTest::Project
+        expect(@client.project(id: 1)).to be_a QTest::Project
       end
 
       it 'should get all projects' do

@@ -4,36 +4,31 @@ module QTest
       include QTest::REST::CRUD
       include QTest::REST::Utils
 
-      def test_suite(opts={})
-        path = build_path('/api/v3',
-                          :projects,
-                          opts[:project],
+      def test_suite(args={})
+        path = build_path('/api/v3/projects',
+                          args[:project],
                           'test-suites',
-                          opts[:id])
-        response = handle_response(self.class.get(path))
-        deserialize_response(response, QTest::TestSuite)
+                          args[:id])
+
+        get(QTest::TestSuite, path)
       end
 
-      def test_suites(opts={})
+      def test_suites(args={})
         options = {}
-        if opts[:release]
-          options[:query] = release_parent_query_param(opts[:release])
-        elsif opts[:test_cycle]
-          options[:query] = test_cycle_parent_query_param(opts[:test_cycle])
-        elsif opts[:test_suite]
-          options[:query] = test_suite_parent_query_param(opts[:test_suite])
+        if args[:release]
+          options[:query] = release_parent_query_param(args[:release])
+        elsif args[:test_cycle]
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
+        elsif args[:test_suite]
+          options[:query] = test_suite_parent_query_param(args[:test_suite])
         end
 
-        options[:path] = build_path('/api/v3',
-                                    :projects,
-                                    opts[:project],
-                                    'test-suites')
-        read(QTest::TestSuite, options)
+        path = build_path('/api/v3/projects', args[:project], 'test-suites')
+        get(QTest::TestSuite, path, options)
       end
 
       def create_test_suite(args={})
         options = {
-          path: build_path('/api/v3/projects', args[:project], 'test-suites'),
           body: {
             name: args[:name]
           }
@@ -46,7 +41,8 @@ module QTest
           options[:body][:target_build_id] = args[:target_build]
         end
 
-        create(QTest::TestSuite, options)
+        path = build_path('/api/v3/projects', args[:project], 'test-suites')
+        post(QTest::TestSuite, path, options)
       end
     end
   end

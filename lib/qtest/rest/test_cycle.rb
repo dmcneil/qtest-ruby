@@ -14,7 +14,7 @@ module QTest
       # @return [QTest::TestCycle]
       def test_cycle(args={})
         path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        read(QTest::TestCycle, path: path)
+        get(QTest::TestCycle, path)
       end
 
       # Get a collection of Test Cycles.
@@ -38,9 +38,9 @@ module QTest
         elsif args[:release]
           options[:query] = release_parent_query_param(args[:release])
         end
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles')
 
-        read(QTest::TestCycle, options)
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
+        get(QTest::TestCycle, path, options)
       end
 
       # Create a new Test Cycle.
@@ -66,7 +66,6 @@ module QTest
       # @return [QTest::TestCycle]
       def create_test_cycle(args={})
         options = {
-          path: build_path('/api/v3/projects', args[:project], 'test-cycles'),
           body: {
             name: args[:name],
             description: args[:description]
@@ -80,7 +79,8 @@ module QTest
           options[:body][:target_build_id] = args[:target_build]
         end
 
-        create(QTest::TestCycle, options)
+        path = build_path('/api/v3/projects', args[:project], 'test-cycles')
+        post(QTest::TestCycle, path, options)
       end
 
       # Move a Test Cycle to another container.
@@ -104,13 +104,16 @@ module QTest
         options = {}
 
         if args[:test_cycle]
-          options[:query] = build_parent_query_param(args[:test_cycle], :test_cycle)
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
         elsif args[:release]
-          options[:query] = build_parent_query_param(args[:release], :release)
+          options[:query] = release_parent_query_param(args[:release])
         end
 
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        update(QTest::TestCycle, options)
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-cycles',
+                          args[:id])
+        put(QTest::TestCycle, path, options)
       end
 
       # Update a Test Cycle.
@@ -131,8 +134,11 @@ module QTest
         options[:body][:name] = args[:name] if args[:name]
         options[:body][:description] = args[:description] if args[:description]
 
-        options[:path] = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        update(QTest::TestCycle, options)
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-cycles',
+                          args[:id])
+        put(QTest::TestCycle, path, options)
       end
 
       # Delete a Test Cycle.
@@ -144,8 +150,17 @@ module QTest
       #     * :force - If true, delete all children of the Test Cycle
       #
       def delete_test_cycle(args={})
-        path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
-        delete(path: path, query: {force: args[:force] || false})
+        options = {
+          query: {
+            force: args[:force] || false
+          }
+        }
+
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-cycles',
+                          args[:id])
+        delete(path, options)
       end
     end
   end
