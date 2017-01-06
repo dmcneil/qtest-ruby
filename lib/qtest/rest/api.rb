@@ -1,4 +1,3 @@
-require_relative 'crud'
 require_relative 'utils'
 require_relative 'project'
 require_relative 'release'

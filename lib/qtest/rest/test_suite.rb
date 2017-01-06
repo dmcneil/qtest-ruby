@@ -1,7 +1,6 @@
 module QTest
   module REST
     module TestSuite
-      include QTest::REST::CRUD
       include QTest::REST::Utils
 
       def test_suite(args = {})

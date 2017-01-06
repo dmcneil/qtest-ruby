@@ -2,7 +2,6 @@ module QTest
   module REST
     module Project
       include QTest::REST::Utils
-      include QTest::REST::CRUD
 
       # Get a Project by ID.
       #

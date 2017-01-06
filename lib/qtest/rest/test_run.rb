@@ -2,7 +2,6 @@ module QTest
   module REST
     module TestRun
       include QTest::REST::Utils
-      include QTest::REST::CRUD
 
       # Get a Test Run by its ID.
       #

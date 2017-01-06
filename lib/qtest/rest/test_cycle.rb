@@ -2,7 +2,6 @@ module QTest
   module REST
     module TestCycle
       include QTest::REST::Utils
-      include QTest::REST::CRUD
 
       # Get a Test Cycle by its ID.
       #
