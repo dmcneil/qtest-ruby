@@ -22,8 +22,8 @@ module QTest
 
       it 'should get all releases' do
         expect(@client).to receive(:releases)
-                           .with(project: 1)
-                           .and_return([@release])
+          .with(project: 1)
+          .and_return([@release])
 
         releases = @project.releases
 
@@ -34,8 +34,8 @@ module QTest
 
       it 'should get a specific release' do
         expect(@client).to receive(:release)
-                           .with(id: 5, project: 1)
-                           .and_return(@release)
+          .with(id: 5, project: 1)
+          .and_return(@release)
 
         release = @project.release(id: 5)
 

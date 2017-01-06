@@ -14,6 +14,4 @@ test_cycle = release.test_cycles.select { |tc| tc.id == 117 }.first
 
 test_cycle.create_test_suite(name: 'Automation Test')
 
-binding.pry
-
 puts 'Done'

@@ -4,7 +4,7 @@ module QTest
       include QTest::REST::Utils
       include QTest::REST::CRUD
 
-      def release(args={})
+      def release(args = {})
         path = build_path('/api/v3/projects',
                           args[:project],
                           'releases',
@@ -12,7 +12,7 @@ module QTest
         get(QTest::Release, path)
       end
 
-      def releases(args={})
+      def releases(args = {})
         path = build_path('/api/v3/projects', args[:project], 'releases')
         get(QTest::Release, path)
       end

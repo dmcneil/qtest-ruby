@@ -2,7 +2,7 @@ module QTest
   class Client
     include QTest::REST::API
 
-    def initialize(opts={})
+    def initialize(_opts = {})
       define_base_client
     end
 

@@ -37,19 +37,20 @@ module QTest
       #
       # @param opts [Hash] qTest credentials
       # @return [String] authorization token if successful
-      def auth(opts={})
+      def auth(opts = {})
         options = {
           headers: {
             'Content-Type' => 'application/x-www-form-urlencoded'
           },
           body: {
             j_username: opts[:username],
-            j_password: opts[:password]}
+            j_password: opts[:password]
+          }
         }
 
         response = self.class.post('/api/login', options)
         @token = handle_response(response, raw: true)
-        self.class.send(:headers, {'Authorization' => @token})
+        self.class.send(:headers, 'Authorization' => @token)
 
         @token
       end

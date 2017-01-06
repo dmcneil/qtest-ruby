@@ -16,8 +16,8 @@ module QTest
 
       it 'should get all test cycles' do
         expect(@client).to receive(:test_cycles)
-                           .with(project: 1, release: 5)
-                           .and_return([@test_cycle])
+          .with(project: 1, release: 5)
+          .and_return([@test_cycle])
 
         test_cycles = @release.test_cycles
 

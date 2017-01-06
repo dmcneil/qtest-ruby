@@ -22,9 +22,9 @@ module QTest
       it 'should raise an error if no client has been created' do
         QTest::Base.singleton_class.send(:undef_method, :client)
 
-        expect {
+        expect do
           QTest::Base.client
-        }.to raise_error QTest::Error, 'No QTest::Client found. Create one using QTest::Client.new first.'
+        end.to raise_error QTest::Error, 'No QTest::Client found. Create one using QTest::Client.new first.'
       end
     end
   end

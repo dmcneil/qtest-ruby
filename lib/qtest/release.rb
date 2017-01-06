@@ -2,7 +2,7 @@ module QTest
   class Release < QTest::Base
     attr_accessor :id, :project
 
-    def initialize(opts={})
+    def initialize(opts = {})
       @id = opts[:id]
       @project = opts[:project]
     end

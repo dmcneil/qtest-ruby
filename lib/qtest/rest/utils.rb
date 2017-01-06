@@ -12,12 +12,10 @@ module QTest
       # @param args [Array] arguments to build with
       # @return [String]
       def build_path(*args)
-        args = args.map { |arg| arg.to_s }.join('/')
+        args = args.map(&:to_s).join('/')
 
         unless args.empty?
-          unless args.start_with?('/')
-            args = "/#{args}"
-          end
+          args = "/#{args}" unless args.start_with?('/')
         end
 
         args
@@ -56,7 +54,7 @@ module QTest
       # @param parent_id [Integer/String] id of the parent
       # @param parent_type [Symbol/String] type of the parent
       def build_parent_query_param(parent_id, parent_type)
-        parent_type = parent_type.to_s.gsub('_', '-') if parent_type.is_a? Symbol
+        parent_type = parent_type.to_s.tr('_', '-') if parent_type.is_a? Symbol
 
         {
           'parentId' => parent_id,
@@ -87,7 +85,7 @@ module QTest
       #
       # @param response [Net::HTTP::Response] response to handle
       # @param opts [Hash] Hash of options
-      def handle_response(response, opts={})
+      def handle_response(response, opts = {})
         case response.code
         when 200..207
           if opts[:raw]
@@ -108,7 +106,7 @@ module QTest
       #
       # @param body [String] String to decode
       # @param symbolize_keys [Boolean] convert keys to Symbols
-      def decode_response_body(body, symbolize_keys=true)
+      def decode_response_body(body, symbolize_keys = true)
         JSON.parse(body, symbolize_names: symbolize_keys)
       end
     end

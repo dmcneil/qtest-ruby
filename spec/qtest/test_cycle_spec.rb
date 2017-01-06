@@ -16,8 +16,8 @@ module QTest
 
       it 'should get all test suites' do
         expect(@client).to receive(:test_suites)
-                           .with(project: 1, test_cycle: 4)
-                           .and_return([@test_suite])
+          .with(project: 1, test_cycle: 4)
+          .and_return([@test_suite])
 
         test_suites = @test_cycle.test_suites
 
@@ -28,8 +28,8 @@ module QTest
 
       it 'should create a test suite' do
         expect(@client).to receive(:create_test_suite)
-                           .with(project: 1, test_cycle: 4, name: 'Foo')
-                           .and_return(@test_suite)
+          .with(project: 1, test_cycle: 4, name: 'Foo')
+          .and_return(@test_suite)
 
         test_suite = @test_cycle.create_test_suite(name: 'Foo')
 
@@ -46,8 +46,8 @@ module QTest
 
       it 'should get all test runs' do
         expect(@client).to receive(:test_runs)
-                           .with(project: 1, test_cycle: 4)
-                           .and_return([@test_run])
+          .with(project: 1, test_cycle: 4)
+          .and_return([@test_run])
 
         test_runs = @test_cycle.test_runs
 

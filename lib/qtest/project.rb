@@ -1,14 +1,14 @@
 module QTest
   class Project < Base
     class << self
-      def find_by(opts={})
+      def find_by(opts = {})
         client.project(opts[:id]) if opts[:id]
       end
     end
 
     attr_accessor :id
 
-    def initialize(opts={})
+    def initialize(opts = {})
       @id = opts[:id]
     end
 
@@ -19,7 +19,7 @@ module QTest
     #     * :id - the Release ID
     #
     # @return [QTest::Release]
-    def release(opts={})
+    def release(opts = {})
       release = self.class.client.release(project: @id, id: opts[:id])
       release.project = self if release
 

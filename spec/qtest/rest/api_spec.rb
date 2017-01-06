@@ -9,8 +9,8 @@ module QTest
 
         it 'should set the token if successful' do
           stub_request(:post, 'http://www.foo.com/api/login')
-            .with(:body => {'j_password'=>'bar', 'j_username'=>'foo'},
-                  :headers => {'Content-Type'=>'application/x-www-form-urlencoded'})
+            .with(body: { 'j_password' => 'bar', 'j_username' => 'foo' },
+                  headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
             .to_return(status: 200, body: 'foobar')
 
           @client.auth username: 'foo', password: 'bar'
@@ -20,13 +20,13 @@ module QTest
 
         it 'should raise an AuthorizationError if failed' do
           stub_request(:post, 'http://www.foo.com/api/login')
-            .with(:body => {'j_password'=>'bar', 'j_username'=>'foo'},
-                  :headers => {'Content-Type'=>'application/x-www-form-urlencoded'})
+            .with(body: { 'j_password' => 'bar', 'j_username' => 'foo' },
+                  headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
             .to_return(status: 401, body: 'Invalid username/password.')
 
-            expect {
-              @client.auth username: 'foo', password: 'bar'
-            }.to raise_error(AuthorizationError, 'Invalid username/password.')
+          expect do
+            @client.auth username: 'foo', password: 'bar'
+          end.to raise_error(AuthorizationError, 'Invalid username/password.')
         end
       end
     end

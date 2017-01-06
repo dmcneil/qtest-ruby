@@ -1,10 +1,10 @@
 module QTest
   module REST
     module CRUD
-      def post(klass, path, args={})
+      def post(klass, path, args = {})
         options = {
           query: args[:query],
-          headers: {'Content-Type' => 'application/json'},
+          headers: { 'Content-Type' => 'application/json' },
           body: args[:body].to_json
         }
 
@@ -12,15 +12,15 @@ module QTest
         deserialize_response(response, klass)
       end
 
-      def get(klass, path, args={})
+      def get(klass, path, args = {})
         response = handle_response(self.class.get(path, args))
         deserialize_response(response, klass)
       end
 
-      def put(klass, path, args={})
+      def put(klass, path, args = {})
         options = {
           query: args[:query],
-          headers: {'Content-Type' => 'application/json'},
+          headers: { 'Content-Type' => 'application/json' },
           body: args[:body].to_json
         }
 
@@ -28,7 +28,7 @@ module QTest
         deserialize_response(response, klass)
       end
 
-      def delete(path, args={})
+      def delete(path, args = {})
         options = {
           query: args[:query]
         }

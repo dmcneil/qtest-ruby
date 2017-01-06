@@ -15,22 +15,22 @@ module QTest
 
       it 'should get a test suite by id' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-suites/5')
-                    .with(headers: {'Authorization' => 'foobar'})
-                    .to_return(status: 200, body: '{}')
+          .with(headers: { 'Authorization' => 'foobar' })
+          .to_return(status: 200, body: '{}')
 
         expect(@client.test_suite(project: 1, id: 5)).to be_a QTest::TestSuite
       end
 
       it 'should get all test suites for a release' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-suites')
-                    .with(
-                      query: {
-                        'parentId' => 5,
-                        'parentType' => 'release'
-                      },
-                      headers: {'Authorization' => 'foobar'}
-                    )
-                    .to_return(status: 200, body: '[{}, {}]')
+          .with(
+            query: {
+              'parentId' => 5,
+              'parentType' => 'release'
+            },
+            headers: { 'Authorization' => 'foobar' }
+          )
+          .to_return(status: 200, body: '[{}, {}]')
 
         test_suites = @client.test_suites(project: 1, release: 5)
 
@@ -41,14 +41,14 @@ module QTest
 
       it 'should get all test suites for a test cycle' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-suites')
-                    .with(
-                      query: {
-                        'parentId' => 3,
-                        'parentType' => 'test-cycle'
-                      },
-                      headers: {'Authorization' => 'foobar'}
-                    )
-                    .to_return(status: 200, body: '[{}, {}]')
+          .with(
+            query: {
+              'parentId' => 3,
+              'parentType' => 'test-cycle'
+            },
+            headers: { 'Authorization' => 'foobar' }
+          )
+          .to_return(status: 200, body: '[{}, {}]')
 
         test_suites = @client.test_suites(project: 1, test_cycle: 3)
 
@@ -65,8 +65,8 @@ module QTest
               'parentType' => 'test-cycle'
             },
             headers: {
-              'Authorization'=>'foobar',
-              'Content-Type'=>'application/json'
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
             },
             body: {
               name: 'Suite 1'
@@ -91,8 +91,8 @@ module QTest
               'parentType' => 'release'
             },
             headers: {
-              'Authorization'=>'foobar',
-              'Content-Type'=>'application/json'
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
             },
             body: {
               name: 'Release 1',

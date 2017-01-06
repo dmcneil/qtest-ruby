@@ -2,7 +2,7 @@ module QTest
   class TestCycle < QTest::Base
     attr_accessor :id, :project, :release
 
-    def initialize(opts={})
+    def initialize(opts = {})
       @id = opts[:id]
       @project = opts[:project]
       @release = opts[:release]
@@ -10,7 +10,7 @@ module QTest
 
     def test_suites
       test_suites = self.class.client.test_suites(project: @project.id,
-                                                 test_cycle: @id) || []
+                                                  test_cycle: @id) || []
 
       test_suites.map do |test_suite|
         test_suite.project = @project
@@ -19,7 +19,7 @@ module QTest
       end
     end
 
-    def create_test_suite(opts={})
+    def create_test_suite(opts = {})
       test_suite = self.class.client.create_test_suite(project: @project.id,
                                                        test_cycle: @id,
                                                        name: opts[:name])

@@ -4,7 +4,7 @@ module QTest
       include QTest::REST::CRUD
       include QTest::REST::Utils
 
-      def test_suite(args={})
+      def test_suite(args = {})
         path = build_path('/api/v3/projects',
                           args[:project],
                           'test-suites',
@@ -13,7 +13,7 @@ module QTest
         get(QTest::TestSuite, path)
       end
 
-      def test_suites(args={})
+      def test_suites(args = {})
         options = {}
         if args[:release]
           options[:query] = release_parent_query_param(args[:release])
@@ -27,7 +27,7 @@ module QTest
         get(QTest::TestSuite, path, options)
       end
 
-      def create_test_suite(args={})
+      def create_test_suite(args = {})
         options = {
           body: {
             name: args[:name]

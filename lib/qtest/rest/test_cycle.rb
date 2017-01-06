@@ -12,7 +12,7 @@ module QTest
       #     * :project - The parent Project ID
       #
       # @return [QTest::TestCycle]
-      def test_cycle(args={})
+      def test_cycle(args = {})
         path = build_path('/api/v3/projects', args[:project], 'test-cycles', args[:id])
         get(QTest::TestCycle, path)
       end
@@ -31,7 +31,7 @@ module QTest
       # whatever reason both are supplied, the `:test_cycle` takes precedence.
       #
       # @return [Array[QTest::TestCycle]]
-      def test_cycles(args={})
+      def test_cycles(args = {})
         options = {}
         if args[:test_cycle]
           options[:query] = test_cycle_parent_query_param(args[:test_cycle])
@@ -64,7 +64,7 @@ module QTest
       # `:target_build` key.
       #
       # @return [QTest::TestCycle]
-      def create_test_cycle(args={})
+      def create_test_cycle(args = {})
         options = {
           body: {
             name: args[:name],
@@ -100,7 +100,7 @@ module QTest
       # whatever reason both are supplied, the `:test_cycle` takes precedence.
       #
       # @return [QTest::TestCycle]
-      def move_test_cycle(args={})
+      def move_test_cycle(args = {})
         options = {}
 
         if args[:test_cycle]
@@ -126,7 +126,7 @@ module QTest
       #     * :description - A new description for the Test Cycle
       #
       # @return [QTest::TestCycle]
-      def update_test_cycle(args={})
+      def update_test_cycle(args = {})
         options = {
           body: {}
         }
@@ -149,7 +149,7 @@ module QTest
       #     * :project - The parent Project ID
       #     * :force - If true, delete all children of the Test Cycle
       #
-      def delete_test_cycle(args={})
+      def delete_test_cycle(args = {})
         options = {
           query: {
             force: args[:force] || false

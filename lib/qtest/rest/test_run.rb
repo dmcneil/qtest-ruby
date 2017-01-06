@@ -12,7 +12,7 @@ module QTest
       #     * :project - The parent Project ID
       #
       # @return [QTest::TestRun]
-      def test_run(args={})
+      def test_run(args = {})
         path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
         get(QTest::TestRun, path)
       end
@@ -30,7 +30,7 @@ module QTest
       #     * :test_suite - The parent Test Suite ID
       #
       # @return [Array[QTest::TestRun]
-      def test_runs(args={})
+      def test_runs(args = {})
         options = {}
         if args[:release]
           options[:query] = release_parent_query_param(args[:release])
@@ -62,7 +62,7 @@ module QTest
       # whatever reason both are supplied, the `:test_cycle` takes precedence.
       #
       # @return [QTest::TestRun]
-      def create_test_run(args={})
+      def create_test_run(args = {})
         options = {
           body: {
             name: args[:name],
@@ -70,9 +70,7 @@ module QTest
           }
         }
 
-        if args[:test_case]
-          options[:body][:test_case] = args[:test_case]
-        end
+        options[:body][:test_case] = args[:test_case] if args[:test_case]
 
         if args[:release]
           options[:query] = release_parent_query_param(args[:release])
@@ -102,7 +100,7 @@ module QTest
       #     * :test_suite - The parent Test Suite ID
       #
       # @return [QTest::TestRun]
-      def move_test_run(args={})
+      def move_test_run(args = {})
         options = {}
 
         if args[:test_cycle]
@@ -130,7 +128,7 @@ module QTest
       #     * :description - A new description for the Test Run
       #
       # @return [QTest::TestRun]
-      def update_test_run(args={})
+      def update_test_run(args = {})
         options = {
           body: {}
         }
@@ -152,17 +150,17 @@ module QTest
       #     * :id - The Test Run ID
       #     * :project - The parent Project ID
       #
-      def delete_test_run(args={})
+      def delete_test_run(args = {})
         path = build_path('/api/v3/projects', args[:project], 'test-runs', args[:id])
         delete(path)
       end
 
-      def execution_statuses(args={})
+      def execution_statuses(args = {})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/execution-statuses')
         get(Hash, path)
       end
 
-      def test_run_fields(args={})
+      def test_run_fields(args = {})
         path = build_path('/api/v3/projects', args[:project], 'test-runs/fields')
         get(Hash, path)
       end
