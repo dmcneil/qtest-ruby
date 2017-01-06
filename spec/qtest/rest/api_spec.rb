@@ -11,7 +11,7 @@ module QTest
           stub_request(:post, 'http://www.foo.com/api/login')
             .with(:body => {'j_password'=>'bar', 'j_username'=>'foo'},
                   :headers => {'Content-Type'=>'application/x-www-form-urlencoded'})
-            .to_return(:status => 200, :body => 'foobar', :headers => {})
+            .to_return(status: 200, body: 'foobar')
 
           @client.auth username: 'foo', password: 'bar'
 
@@ -22,7 +22,7 @@ module QTest
           stub_request(:post, 'http://www.foo.com/api/login')
             .with(:body => {'j_password'=>'bar', 'j_username'=>'foo'},
                   :headers => {'Content-Type'=>'application/x-www-form-urlencoded'})
-            .to_return(:status => 401, :body => 'Invalid username/password.', :headers => {})
+            .to_return(status: 401, body: 'Invalid username/password.')
 
             expect {
               @client.auth username: 'foo', password: 'bar'

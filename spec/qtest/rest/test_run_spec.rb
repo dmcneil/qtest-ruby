@@ -16,7 +16,7 @@ module QTest
       it 'should get a test run by its id' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs/3')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.test_run(id: 3, project: 1)).to be_a QTest::TestRun
       end
@@ -24,12 +24,13 @@ module QTest
       it 'should get all test runs for a release' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs')
           .with(
-            headers: {'Authorization' => 'foobar'},
             query: {
               'parentId' => 5,
               'parentType' => 'release'
-          })
-          .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
+            },
+            headers: {'Authorization' => 'foobar'}
+          )
+          .to_return(status: 200, body: '[{}, {}]')
 
         test_runs = @client.test_runs(project: 1, release: 5)
 
@@ -41,12 +42,13 @@ module QTest
       it 'should get all test runs for a test cycle' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs')
           .with(
-          headers: {'Authorization' => 'foobar'},
-          query: {
-              'parentId' => 3,
-              'parentType' => 'test-cycle'
-          })
-          .to_return(:status => 200, :body => '[{}]', :headers => {})
+            query: {
+                'parentId' => 3,
+                'parentType' => 'test-cycle'
+            },
+            headers: {'Authorization' => 'foobar'}
+          )
+          .to_return(status: 200, body: '[{}]')
 
         test_runs = @client.test_runs(project: 1, test_cycle: 3)
 
@@ -57,12 +59,13 @@ module QTest
       it 'should get all test runs for a test suite' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs')
           .with(
-          headers: {'Authorization' => 'foobar'},
-          query: {
-              'parentId' => 6,
-              'parentType' => 'test-suite'
-          })
-          .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
+            query: {
+                'parentId' => 6,
+                'parentType' => 'test-suite'
+            },
+            headers: {'Authorization' => 'foobar'}
+          )
+          .to_return(status: 200, body: '[{}, {}]')
 
         test_runs = @client.test_runs(project: 1, test_suite: 6)
 
@@ -72,16 +75,24 @@ module QTest
       end
 
       it 'should create a test run under a release' do
-        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=release')
-          .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
-                body: {
-                  name: 'Run 1',
-                  test_case: {
-                    test_case_version_id: 5
-                  }
-                }.to_json
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs')
+          .with(
+            query: {
+              'parentId' => 2,
+              'parentType' => 'release'
+            },
+            headers: {
+              'Authorization'=>'foobar',
+              'Content-Type'=>'application/json'
+            },
+            body: {
+              name: 'Run 1',
+              test_case: {
+                test_case_version_id: 5
+              }
+            }.to_json
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         test_run = {
           project: 1,
@@ -96,16 +107,24 @@ module QTest
       end
 
       it 'should create a test run under a test cycle' do
-        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-cycle')
-        .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
-              body: {
-                name: 'Run 1',
-                test_case: {
-                  test_case_version_id: 5
-                }
-              }.to_json
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs')
+          .with(
+            query: {
+              'parentId' => 2,
+              'parentType' => 'test-cycle'
+            },
+            headers: {
+              'Authorization'=>'foobar',
+              'Content-Type'=>'application/json'
+            },
+            body: {
+              name: 'Run 1',
+              test_case: {
+                test_case_version_id: 5
+              }
+            }.to_json
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         test_run = {
           project: 1,
@@ -120,16 +139,24 @@ module QTest
       end
 
       it 'should create a test run under a test suite' do
-        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs?parentId=2&parentType=test-suite')
-        .with(headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'},
-              body: {
-                name: 'Run 1',
-                test_case: {
-                  test_case_version_id: 5
-                }
-              }.to_json
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs')
+          .with(
+            query: {
+              'parentId' => 2,
+              'parentType' => 'test-suite'
+            },
+            headers: {
+              'Authorization'=>'foobar',
+              'Content-Type'=>'application/json'
+            },
+            body: {
+              name: 'Run 1',
+              test_case: {
+                test_case_version_id: 5
+              }
+            }.to_json
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         test_run = {
           project: 1,
@@ -152,9 +179,13 @@ module QTest
               'parentType' => 'release'
             }
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
-        expect(@client.move_test_run(id: 9, project: 1, release: 6)).to be_a QTest::TestRun
+        expect(@client.move_test_run({
+          id: 9,
+          project: 1,
+          release: 6
+          })).to be_a QTest::TestRun
       end
 
       it 'should update a test run' do
@@ -165,7 +196,7 @@ module QTest
               name: 'New name'
             }.to_json
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.update_test_run({
           id: 9,
@@ -179,7 +210,7 @@ module QTest
           .with(
             headers: {'Authorization' => 'foobar'}
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect {
           @client.delete_test_run(id: 4, project: 1)
@@ -189,7 +220,7 @@ module QTest
       it 'should get execution status values' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs/execution-statuses')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
+          .to_return(status: 200, body: '[{}, {}]')
 
         expect(@client.execution_statuses(project: 1).count).to eq 2
       end
@@ -197,13 +228,11 @@ module QTest
       it 'should get test run fields' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-runs/fields')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(status: 200, body: '[{"id": 1}, {"id": 2}]', headers: {})
+          .to_return(status: 200, body: '[{}, {}]')
 
         fields = @client.test_run_fields(project: 1)
 
         expect(fields.count).to be 2
-        expect(fields[0][:id]).to eq 1
-        expect(fields[1][:id]).to eq 2
       end
     end
   end

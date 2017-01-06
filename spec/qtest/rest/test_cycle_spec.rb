@@ -16,7 +16,7 @@ module QTest
       it 'should get a test cycle by id' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-cycles/3')
           .with(headers: {'Authorization' => 'foobar'})
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.test_cycle(project: 1, id: 3)).to be_a QTest::TestCycle
       end
@@ -30,7 +30,7 @@ module QTest
               'parentType' => 'release'
             }
           )
-          .to_return(:status => 200, :body => '[{}, {}]', :headers => {})
+          .to_return(status: 200, body: '[{}, {}]')
 
         test_cycles = @client.test_cycles(project: 1, release: 2)
 
@@ -54,14 +54,23 @@ module QTest
       end
 
       it 'should create a test cycle under a release' do
-        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-cycles?parentId=2&parentType=release')
-          .with(body: {
-                  name: 'Cycle 1',
-                  description: 'Create a foo cycle',
-                  target_build_id: 15332
-                }.to_json,
-                headers: {'Authorization'=>'foobar', 'Content-Type'=>'application/json'})
-          .to_return(:status => 200, :body => '{}', :headers => {})
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-cycles')
+          .with(
+            query: {
+              'parentId' => 2,
+              'parentType' => 'release'
+            },
+            body: {
+              name: 'Cycle 1',
+              description: 'Create a foo cycle',
+              target_build_id: 15332
+            }.to_json,
+            headers: {
+              'Authorization'=>'foobar',
+              'Content-Type'=>'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}')
 
         test_cycle = {
           project: 1,
@@ -83,7 +92,7 @@ module QTest
               'parentType' => 'test-cycle'
             }
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.move_test_cycle(id: 9, project: 1, test_cycle: 4)).to be_a QTest::TestCycle
       end
@@ -97,7 +106,7 @@ module QTest
               'parentType' => 'release'
             }
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.move_test_cycle(id: 9, project: 1, release: 6)).to be_a QTest::TestCycle
       end
@@ -111,7 +120,7 @@ module QTest
               description: 'New description'
             }.to_json
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect(@client.update_test_cycle({
           id: 9,
@@ -129,7 +138,7 @@ module QTest
               force: false
             }
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect {
           @client.delete_test_cycle(id: 9, project: 1)
@@ -144,7 +153,7 @@ module QTest
               force: true
             }
           )
-          .to_return(:status => 200, :body => '{}', :headers => {})
+          .to_return(status: 200, body: '{}')
 
         expect {
           @client.delete_test_cycle(id: 9, project: 1, force: true)
