@@ -35,11 +35,8 @@ module QTest
                                                        test_cycle: @id,
                                                        name: opts[:name])
 
-      if test_suite
-        test_suite.project = @project
-        test_suite.test_cycle = self
-      end
-
+      test_suite.project = @project
+      test_suite.test_cycle = self
       test_suite
     end
 

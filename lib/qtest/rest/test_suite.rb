@@ -29,7 +29,8 @@ module QTest
       def create_test_suite(args = {})
         options = {
           body: {
-            name: args[:name]
+            name: args[:name],
+            properties: args[:properties] || []
           }
         }
 
@@ -42,6 +43,36 @@ module QTest
 
         path = build_path('/api/v3/projects', args[:project], 'test-suites')
         post(QTest::TestSuite, path, options)
+      end
+
+      def move_test_suite(args = {})
+        options = {}
+        if args[:test_cycle]
+          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
+        elsif args[:release]
+          options[:query] = release_parent_query_param(args[:release])
+        end
+
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-suites',
+                          args[:test_suite])
+        put(QTest::TestSuite, path, options)
+      end
+
+      def update_test_suite(args = {})
+        options = {
+          body: {
+            name: args[:name],
+            properties: args[:properties]
+          }
+        }
+
+        path = build_path('/api/v3/projects',
+                          args[:project],
+                          'test-suites',
+                          args[:test_suite])
+        put(QTest::TestSuite, path, options)
       end
     end
   end

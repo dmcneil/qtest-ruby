@@ -36,5 +36,33 @@ module QTest
         expect(@test_suite.test_runs).to eq []
       end
     end
+
+    it 'should move a test suite to another test cycle' do
+      test_cycle = QTest::TestCycle.new(id: 2)
+
+      expect(@client).to receive(:move_test_suite)
+        .with(project: 1, test_cycle: 2, test_suite: @test_suite.id)
+        .and_return(@test_suite)
+      expect(@client).to receive(:test_cycle)
+        .with(project: 1, test_cycle: 2)
+        .and_return(test_cycle)
+
+      expect(@test_suite.move(test_cycle: 2)).to eq @test_suite
+      expect(@test_suite.test_cycle).to eq test_cycle
+    end
+
+    it 'should move a test suite to another release' do
+      release = QTest::Release.new(id: 2)
+
+      expect(@client).to receive(:move_test_suite)
+        .with(project: 1, release: 2, test_suite: @test_suite.id)
+        .and_return(@test_suite)
+      expect(@client).to receive(:release)
+        .with(project: 1, release: 2)
+        .and_return(release)
+
+      expect(@test_suite.move(release: 2)).to eq @test_suite
+      expect(@test_suite.release).to eq release
+    end
   end
 end

@@ -69,7 +69,8 @@ module QTest
               'Content-Type' => 'application/json'
             },
             body: {
-              name: 'Suite 1'
+              name: 'Suite 1',
+              properties: []
             }.to_json
           )
           .to_return(status: 200, body: '{}')
@@ -96,19 +97,99 @@ module QTest
             },
             body: {
               name: 'Release 1',
-              target_build_id: 123
+              properties: [],
+              target_build_id: 123,
             }.to_json
           )
           .to_return(status: 200, body: '{}')
 
-        release = {
+        test_suite = {
           project: 1,
           release: 2,
           name: 'Release 1',
+          properties: [],
           target_build: 123
         }
 
-        expect(@client.create_test_suite(release)).to be_a QTest::TestSuite
+        expect(@client.create_test_suite(test_suite)).to be_a QTest::TestSuite
+      end
+
+      it 'should move a test suite to another test cycle' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-suites/2')
+          .with(
+            query: {
+              'parentId' => '5',
+              'parentType' => 'test-cycle'
+            },
+            headers: {
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}')
+
+          test_suite = @client.move_test_suite({
+            project: 1,
+            test_suite: 2,
+            test_cycle: 5
+          })
+
+          expect(test_suite).to be_a QTest::TestSuite
+      end
+
+      it 'should move a test suite to another release' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-suites/2')
+          .with(
+            query: {
+              'parentId' => '5',
+              'parentType' => 'release'
+            },
+            headers: {
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}')
+
+          test_suite = @client.move_test_suite({
+            project: 1,
+            test_suite: 2,
+            release: 5
+          })
+
+          expect(test_suite).to be_a QTest::TestSuite
+      end
+
+      it 'should update a test suite' do
+        stub_request(:put, 'http://www.foo.com/api/v3/projects/1/test-suites/2')
+          .with(
+            body: {
+              name: 'New name',
+              properties: [{
+                field_id: 1,
+                field_value: 'New value'
+              }]
+            }.to_json,
+            headers: {
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
+            }
+          )
+          .to_return(status: 200, body: '{}')
+
+        test_suite = @client.update_test_suite({
+          project: 1,
+          test_suite: 2,
+          name: 'New name',
+          properties: [
+            {
+              field_id: 1,
+              field_value: 'New value'
+            }
+          ]
+        })
+
+        expect(test_suite).to be_a QTest::TestSuite
       end
     end
   end
