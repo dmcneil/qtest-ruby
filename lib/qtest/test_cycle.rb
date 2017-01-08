@@ -1,11 +1,22 @@
 module QTest
   class TestCycle < QTest::Base
-    attr_accessor :id, :project, :release
+    attr_accessor :id, :project, :release, :test_cycle
 
     def initialize(opts = {})
       @id = opts[:id]
       @project = opts[:project]
       @release = opts[:release]
+    end
+
+    def test_cycles
+      test_cycles = self.class.client.test_cycles(project: @project.id,
+                                                  test_cycle: @id)
+
+      test_cycles.map do |test_cycle|
+        test_cycle.project = @project
+        test_cycle.test_cycle = self
+        test_cycle
+      end
     end
 
     def test_suites
@@ -33,7 +44,8 @@ module QTest
     end
 
     def test_runs
-      test_runs = self.class.client.test_runs(project: @project.id, test_cycle: @id) || []
+      test_runs = self.class.client.test_runs(project: @project.id,
+                                              test_cycle: @id) || []
       test_runs.map do |test_run|
         test_run.project = @project
         test_run.test_cycle = self
