@@ -27,6 +27,24 @@ module QTest
         })
       end
 
+      describe 'headers' do
+        it 'should add symbol headers' do
+          @qb.header(:content_type, 'application/json')
+
+          expect(@qb.build[:headers]).to eq({
+            'Content-Type' => 'application/json'
+          })
+        end
+
+        it 'should add string headers' do
+          @qb.header('Content-Type', 'application/json')
+
+          expect(@qb.build[:headers]).to eq({
+            'Content-Type' => 'application/json'
+          })
+        end
+      end
+
       describe 'project' do
         it 'should append /projects/:id' do
           @qb.project(1)

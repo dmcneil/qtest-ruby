@@ -20,18 +20,25 @@ module QTest
         end
         @path = []
         @query = {}
+        @headers = {}
       end
 
       def with(*paths)
         @path << paths
+        self
       end
 
       def under(resource, id)
         @query['parentType'] = resource.to_s
         @query['parentId'] = id
+        self
       end
       alias_method :parent, :under
 
+      def header(key, value)
+        key = encode_for_header(key)
+        @headers[key] = value
+      end
 
       def build(opts = {})
         unless opts[:api_path] == false
@@ -40,7 +47,8 @@ module QTest
 
         {
           path: @path.join('/'),
-          query: @query
+          query: @query,
+          headers: @headers
         }
       end
 
@@ -59,7 +67,6 @@ module QTest
 
           @path << encode_for_path(resource)
           @path << value
-
           self
         end
       end
@@ -73,6 +80,10 @@ module QTest
 
       def encode_for_path(resource)
         resource.to_s.pluralize.dasherize
+      end
+
+      def encode_for_header(key)
+        key.to_s.titleize.gsub(/\s+/, '-')
       end
     end
   end
