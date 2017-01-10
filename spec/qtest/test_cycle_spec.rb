@@ -10,19 +10,15 @@ module QTest
     end
 
     describe 'test cycles' do
-      before do
-        @another_test_cycle = QTest::TestCycle.new(id: 3)
-      end
-
       it 'should get all test cycles' do
         expect(@client).to receive(:test_cycles)
           .with(project: 1, test_cycle: 4)
-          .and_return([@another_test_cycle])
+          .and_return([{}])
 
         test_cycles = @test_cycle.test_cycles
 
         expect(test_cycles).to be_a Array
-        expect(test_cycles.first).to eq @another_test_cycle
+        expect(test_cycles.first).to be_a QTest::TestCycle
         expect(test_cycles.first.project).to eq @project
         expect(test_cycles.first.test_cycle).to eq @test_cycle
       end
@@ -34,22 +30,37 @@ module QTest
 
         expect(@test_cycle.test_cycles).to eq []
       end
+
+      it 'should create a test cycle' do
+        expect(@client).to receive(:create_test_cycle)
+          .with({
+            project: 1,
+            test_cycle: 4,
+            attributes: {
+              name: 'Foo',
+              description: nil
+            }
+          })
+          .and_return({})
+
+        test_cycle = @test_cycle.create_test_cycle(name: 'Foo')
+
+        expect(test_cycle).to be_a QTest::TestCycle
+        expect(test_cycle.project).to eq @project
+        expect(test_cycle.test_cycle).to eq @test_cycle
+      end
     end
 
     describe 'test suites' do
-      before do
-        @test_suite = QTest::TestSuite.new(id: 8)
-      end
-
       it 'should get all test suites' do
         expect(@client).to receive(:test_suites)
           .with(project: 1, test_cycle: 4)
-          .and_return([@test_suite])
+          .and_return([{}])
 
         test_suites = @test_cycle.test_suites
 
         expect(test_suites).to be_a Array
-        expect(test_suites.first).to eq @test_suite
+        expect(test_suites.first).to be_a QTest::TestSuite
         expect(test_suites.first.project).to eq @project
         expect(test_suites.first.test_cycle).to eq @test_cycle
       end
@@ -64,31 +75,33 @@ module QTest
 
       it 'should create a test suite' do
         expect(@client).to receive(:create_test_suite)
-          .with(project: 1, test_cycle: 4, name: 'Foo')
-          .and_return(@test_suite)
+          .with({
+            project: 1,
+            test_cycle: 4,
+            attributes: {
+              name: 'Foo'
+            }
+          })
+          .and_return({})
 
         test_suite = @test_cycle.create_test_suite(name: 'Foo')
 
-        expect(test_suite).to eq @test_suite
+        expect(test_suite).to be_a QTest::TestSuite
         expect(test_suite.project).to eq @project
         expect(test_suite.test_cycle).to eq @test_cycle
       end
     end
 
     describe 'test runs' do
-      before do
-        @test_run = QTest::TestRun.new(id: 3)
-      end
-
       it 'should get all test runs' do
         expect(@client).to receive(:test_runs)
           .with(project: 1, test_cycle: 4)
-          .and_return([@test_run])
+          .and_return([{}])
 
         test_runs = @test_cycle.test_runs
 
         expect(test_runs).to be_a Array
-        expect(test_runs.first).to eq @test_run
+        expect(test_runs.first).to be_a QTest::TestRun
         expect(test_runs.first.test_cycle).to eq @test_cycle
         expect(test_runs.first.project).to eq @project
       end

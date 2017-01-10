@@ -9,8 +9,13 @@ module QTest
 
     describe 'class methods' do
       it 'should find by id' do
-        expect(@client).to receive(:project).with(1)
-        QTest::Project.find_by(id: 1)
+        expect(@client).to receive(:project)
+                           .with(1)
+                           .and_return({})
+
+        project = QTest::Project.find_by(id: 1)
+
+        expect(project).to be_a QTest::Project
       end
     end
 
@@ -23,23 +28,23 @@ module QTest
       it 'should get all releases' do
         expect(@client).to receive(:releases)
           .with(project: 1)
-          .and_return([@release])
+          .and_return([{}])
 
         releases = @project.releases
 
         expect(releases).to be_a Array
-        expect(releases.first).to eq @release
+        expect(releases.first).to be_a QTest::Release
         expect(releases.first.project).to eq @project
       end
 
       it 'should get a specific release' do
         expect(@client).to receive(:release)
           .with(id: 5, project: 1)
-          .and_return(@release)
+          .and_return({})
 
         release = @project.release(id: 5)
 
-        expect(release).to eq @release
+        expect(release).to be_a QTest::Release
         expect(release.project).to eq @project
       end
     end

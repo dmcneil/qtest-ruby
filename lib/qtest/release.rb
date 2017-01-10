@@ -11,15 +11,13 @@ module QTest
     #
     # @return [Array[QTest::TestCycle]]
     def test_cycles
-      test_cycles = self
-                    .class
-                    .client
-                    .test_cycles(project: @project.id, release: @id)
+      test_cycles = client.test_cycles(project: @project.id, release: @id)
 
       test_cycles.map do |test_cycle|
-        test_cycle.release = self
-        test_cycle.project = @project
-        test_cycle
+        test_cycle[:release] = self
+        test_cycle[:project] = @project
+
+        QTest::TestCycle.new(test_cycle)
       end
     end
 
@@ -27,29 +25,52 @@ module QTest
     #
     # @return [Array[QTest::TestSuite]]
     def test_suites
-      test_suites = self
-                    .class
-                    .client
-                    .test_suites(project: @project.id, release: @id)
+      test_suites = client.test_suites(project: @project.id, release: @id)
 
       test_suites.map do |test_suite|
-        test_suite.release = self
-        test_suite.project = @project
-        test_suite
+        test_suite[:release] = self
+        test_suite[:project] = @project
+
+        QTest::TestSuite.new(test_suite)
       end
     end
 
+    # Create a Test Suite under the Release.
+    #
+    # @return [QTest::TestSuite]
     def create_test_suite(opts = {})
-      test_suite = self.class.client.create_test_suite({
+      test_suite = client.create_test_suite({
         project: @project.id,
         release: @id,
-        name: opts[:name],
-        properties: opts[:properties]
+        attributes: {
+          name: opts[:name],
+          properties: opts[:properties],
+          target_build_id: opts[:target_build]
+        }
       })
+      test_suite[:project] = @project
+      test_suite[:release] = self
 
-      test_suite.project = @project
-      test_suite.release = self
-      test_suite
+
+      QTest::TestSuite.new(test_suite)
+    end
+
+    # Create a Test Cycle under the Release.
+    #
+    # @return [QTest::TestCycle]
+    def create_test_cycle(opts = {})
+      test_cycle = client.create_test_cycle({
+        project: @project.id,
+        release: @id,
+        attributes: {
+          name: opts[:name],
+          description: opts[:description]
+        }
+      })
+      test_cycle[:project] = @project
+      test_cycle[:release] = self
+
+      QTest::TestCycle.new(test_cycle)
     end
   end
 end

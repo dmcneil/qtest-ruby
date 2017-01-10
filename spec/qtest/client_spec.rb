@@ -19,12 +19,17 @@ module QTest
         expect(QTest::Base).to respond_to :client
       end
 
+      it 'should define the client for instances of QTest::Base' do
+        expect(QTest::Base.new).to respond_to :client
+      end
+
       it 'should raise an error if no client has been created' do
         QTest::Base.singleton_class.send(:undef_method, :client)
 
-        expect do
+        expect {
           QTest::Base.client
-        end.to raise_error QTest::Error, 'No QTest::Client found. Create one using QTest::Client.new first.'
+        }.to raise_error QTest::Error,
+             'No QTest::Client found. Create one using QTest::Client.new first.'
       end
     end
   end

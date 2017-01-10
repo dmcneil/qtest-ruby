@@ -123,6 +123,12 @@ module QTest
             foo: 'bar'
           })
         end
+
+        it 'should drop nil values from the data hash' do
+          @qb.data(foo: nil)
+
+          expect(@qb.build[:body]).to eq({})
+        end
       end
 
       describe 'project' do

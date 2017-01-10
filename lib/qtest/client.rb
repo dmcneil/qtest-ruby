@@ -4,6 +4,7 @@ module QTest
 
     def initialize(_opts = {})
       define_base_client
+      define_base_instance_client
     end
 
     # Configure the Client.
@@ -33,6 +34,13 @@ module QTest
     def define_base_client
       this = self
       QTest::Base.send(:define_singleton_method, :client) do
+        this
+      end
+    end
+
+    def define_base_instance_client
+      this = self
+      QTest::Base.send(:define_method, :client) do
         this
       end
     end

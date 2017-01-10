@@ -2,7 +2,9 @@ module QTest
   class Project < Base
     class << self
       def find_by(opts = {})
-        client.project(opts[:id]) if opts[:id]
+        project = client.project(opts[:id]) if opts[:id]
+
+        self.new(project)
       end
     end
 
@@ -20,20 +22,21 @@ module QTest
     #
     # @return [QTest::Release]
     def release(opts = {})
-      release = self.class.client.release(project: @id, id: opts[:id])
-      release.project = self if release
+      release = client.release(project: @id, id: opts[:id])
+      release[:project] = self
 
-      release
+      QTest::Release.new(release)
     end
 
     # Get all Releases under the Project.
     #
     # @return [Array[QTest::Release]]
     def releases
-      releases = self.class.client.releases(project: @id) || []
+      releases = client.releases(project: @id)
       releases.map do |release|
-        release.project = self
-        release
+        release[:project] = self
+
+        QTest::Release.new(release)
       end
     end
   end

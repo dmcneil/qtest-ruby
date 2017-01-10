@@ -58,6 +58,8 @@ module QTest
           @path = [QTest::REST::API::BASE_PATH, @path].flatten
         end
 
+        sanitize_body!
+
         if opts.include?(:json)
           header(:content_type, 'application/json')
           body = @body.to_json
@@ -105,6 +107,10 @@ module QTest
 
       def encode_for_header(key)
         key.to_s.titleize.gsub(/\s+/, '-')
+      end
+
+      def sanitize_body!
+        @body.reject! { |_k, v| v.nil? }
       end
     end
   end
