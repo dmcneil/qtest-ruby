@@ -9,43 +9,44 @@ module QTest
         :release,
         :test_cycle,
         :test_suite,
-        :test_run
+        :test_run,
+        :test_step
       ]
 
       def initialize
-        RESOURCES.each { |resource| define_resource(resource) }
+        RESOURCES.each do |resource|
+          define_resource(resource)
+          define_resources(resource)
+        end
         @path = []
+        @query = {}
       end
 
-      def build(opts = {})
-        if opts[:base_path]
-          @path << opts[:base_path]
-        else
-          @path << QTest::REST::API::BASE_PATH
-        end
+      def with(*paths)
+        @path << paths
+      end
 
-        [
-          @project,
-          @release,
-          @test_case,
-          @test_suite,
-          @test_cycle,
-          @test_run
-        ].compact.each do |resource|
-          @path << resource
+      def under(resource, id)
+        @query['parentType'] = resource.to_s
+        @query['parentId'] = id
+      end
+      alias_method :parent, :under
+
+
+      def build(opts = {})
+        unless opts[:api_path] == false
+          @path = [QTest::REST::API::BASE_PATH, @path].flatten
         end
 
         {
-          path: @path.join
+          path: @path.join('/'),
+          query: @query
         }
       end
 
       private
 
       def define_resource(resource)
-        resource_pluralized = resource.to_s.pluralize
-        resource_base_path = "/#{resource_pluralized.dasherize}"
-
         self.class.send(:define_method, resource) do |value|
           value = case value
                   when Integer
@@ -56,17 +57,22 @@ module QTest
                     value.id if value.respond_to?(:id)
                   end
 
-          value.prepend("#{resource_base_path}/")
-          self.instance_variable_set("@#{resource}", value)
+          @path << encode_for_path(resource)
+          @path << value
 
           self
         end
+      end
 
-        self.class.send(:define_method, resource_pluralized) do
-          self.instance_variable_set("@#{resource}",
-                                     resource_base_path)
+      def define_resources(resource)
+        self.class.send(:define_method, resource.to_s.pluralize) do
+          @path << encode_for_path(resource)
           self
         end
+      end
+
+      def encode_for_path(resource)
+        resource.to_s.pluralize.dasherize
       end
     end
   end
