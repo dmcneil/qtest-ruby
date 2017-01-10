@@ -5,6 +5,7 @@ gemspec
 
 gem 'httparty'
 gem 'webmock'
+gem 'activesupport'
 
 gem 'rspec'
 gem 'guard'

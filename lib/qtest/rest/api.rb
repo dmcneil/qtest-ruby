@@ -4,6 +4,7 @@ require_relative 'release'
 require_relative 'test_cycle'
 require_relative 'test_run'
 require_relative 'test_suite'
+require_relative 'test_case'
 
 module QTest
   module REST
@@ -15,6 +16,8 @@ module QTest
       include QTest::REST::TestCycle
       include QTest::REST::TestRun
       include QTest::REST::TestSuite
+
+      BASE_PATH = '/api/v3'
 
       def self.included(base)
         base.include HTTParty

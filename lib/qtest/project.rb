@@ -1,5 +1,7 @@
 module QTest
   class Project < Base
+    BASE_PATH = '/projects'
+
     class << self
       def find_by(opts = {})
         client.project(opts[:id]) if opts[:id]
