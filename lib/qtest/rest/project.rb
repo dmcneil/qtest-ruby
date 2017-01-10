@@ -7,17 +7,17 @@ module QTest
       #
       # @param id [Integer] ID of the Project
       # @return [Project]
-      def project(args = {})
-        path = build_path('/api/v3/projects', args[:id])
-        get(QTest::Project, path)
+      def project(opts = {})
+        query = QueryBuilder.new.project(opts[:id]).build
+        get(QTest::Project, query[:path])
       end
 
       # Get all Projects.
       #
       # @return [Array::Project]
       def projects
-        path = build_path('/api/v3/projects')
-        get(QTest::Project, path)
+        query = QueryBuilder.new.projects.build
+        get(QTest::Project, query[:path])
       end
     end
   end
