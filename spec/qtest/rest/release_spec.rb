@@ -18,7 +18,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
-        expect(@client.release(project: 1, id: 5)).to be_a QTest::Release
+        expect(@client.release(project: 1, id: 5)).to eq({})
       end
 
       it 'should get all releases for a project' do
@@ -26,7 +26,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '[{}, {}]')
 
-        expect(@client.releases(project: 1).count).to eq 2
+        expect(@client.releases(project: 1)).to eq([{}, {}])
       end
     end
   end

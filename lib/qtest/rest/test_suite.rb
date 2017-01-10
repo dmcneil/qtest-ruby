@@ -3,76 +3,64 @@ module QTest
     module TestSuite
       include QTest::REST::Utils
 
-      def test_suite(args = {})
-        path = build_path('/api/v3/projects',
-                          args[:project],
-                          'test-suites',
-                          args[:id])
+      # GET '/projects/:project/test-suites/:id'
+      def test_suite(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .test_suite(opts[:id])
 
-        get(QTest::TestSuite, path)
+        determine_parent!(opts)
+        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
+        query = query.build
+
+        get(query)
       end
 
-      def test_suites(args = {})
-        options = {}
-        if args[:release]
-          options[:query] = release_parent_query_param(args[:release])
-        elsif args[:test_cycle]
-          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
-        elsif args[:test_suite]
-          options[:query] = test_suite_parent_query_param(args[:test_suite])
-        end
+      def test_suites(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .test_suites
 
-        path = build_path('/api/v3/projects', args[:project], 'test-suites')
-        get(QTest::TestSuite, path, options)
+        determine_parent!(opts)
+        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
+        query = query.build
+
+        get(query)
       end
 
-      def create_test_suite(args = {})
-        options = {
-          body: {
-            name: args[:name],
-            properties: args[:properties] || []
-          }
-        }
+      def create_test_suite(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .test_suites
+                .data(opts[:attributes])
 
-        if args[:test_cycle]
-          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
-        elsif args[:release]
-          options[:query] = release_parent_query_param(args[:release])
-          options[:body][:target_build_id] = args[:target_build]
-        end
+        determine_parent!(opts)
+        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
+        query = query.build(:json)
 
-        path = build_path('/api/v3/projects', args[:project], 'test-suites')
-        post(QTest::TestSuite, path, options)
+        post(query)
       end
 
-      def move_test_suite(args = {})
-        options = {}
-        if args[:test_cycle]
-          options[:query] = test_cycle_parent_query_param(args[:test_cycle])
-        elsif args[:release]
-          options[:query] = release_parent_query_param(args[:release])
-        end
+      def move_test_suite(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .test_suite(opts[:id])
 
-        path = build_path('/api/v3/projects',
-                          args[:project],
-                          'test-suites',
-                          args[:test_suite])
-        put(QTest::TestSuite, path, options)
+        determine_parent!(opts)
+        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
+        query = query.build
+
+        put(query)
       end
 
-      def update_test_suite(args = {})
-        options = {
-          body: {
-            name: args[:name],
-            properties: args[:properties]
-          }
-        }
+      def update_test_suite(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .test_suite(opts[:id])
+                .data(opts[:attributes])
+                .build(:json)
 
-        path = build_path('/api/v3/projects',
-                          args[:project],
-                          'test-suites',
-                          args[:test_suite])
-        put(QTest::TestSuite, path, options)
+        put(query)
       end
     end
   end

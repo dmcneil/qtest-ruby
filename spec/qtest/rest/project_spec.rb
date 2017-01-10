@@ -18,7 +18,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
-        expect(@client.project(id: 1)).to be_a QTest::Project
+        expect(@client.project(id: 1)).to eq({})
       end
 
       it 'should get all projects' do
@@ -29,8 +29,8 @@ module QTest
         projects = @client.projects
 
         expect(projects.count).to eq 2
-        expect(projects[0]).to be_a QTest::Project
-        expect(projects[1]).to be_a QTest::Project
+        expect(projects[0]).to eq({})
+        expect(projects[1]).to eq({})
       end
     end
   end

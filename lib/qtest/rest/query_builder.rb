@@ -21,6 +21,7 @@ module QTest
         @path = []
         @query = {}
         @headers = {}
+        @body = {}
       end
 
       def with(*paths)
@@ -29,8 +30,8 @@ module QTest
       end
 
       def under(resource, id)
-        @query['parentType'] = resource.to_s
-        @query['parentId'] = id
+        param('parentType', resource.to_s.dasherize)
+        param('parentId', id)
         self
       end
       alias_method :parent, :under
@@ -38,17 +39,37 @@ module QTest
       def header(key, value)
         key = encode_for_header(key)
         @headers[key] = value
+        self
       end
 
-      def build(opts = {})
-        unless opts[:api_path] == false
+      def data(params = {})
+        @body.merge!(params)
+        self
+      end
+      alias_method :body, :data
+
+      def param(key, value)
+        @query[key.to_s] = value
+        self
+      end
+
+      def build(*opts)
+        unless opts.include?(:without_api_path)
           @path = [QTest::REST::API::BASE_PATH, @path].flatten
+        end
+
+        if opts.include?(:json)
+          header(:content_type, 'application/json')
+          body = @body.to_json
+        else
+          body = @body
         end
 
         {
           path: @path.join('/'),
           query: @query,
-          headers: @headers
+          headers: @headers,
+          body: body
         }
       end
 

@@ -5,26 +5,88 @@ module QTest
         @qb = QTest::REST::QueryBuilder.new
       end
 
-      it 'should return itself' do
-        expect(@qb.project(1)).to eq @qb
-      end
-
       it 'should append using with' do
         @qb.with('foo', '5')
         expect(@qb.build[:path]).to eq('/api/v3/foo/5')
       end
 
       it 'should ignore the api base url with an option' do
-        expect(@qb.build(api_path: false)[:path]).to eq('')
+        expect(@qb.build(:without_api_path)[:path]).to eq('')
       end
 
-      it 'should append parent query params' do
-        @qb.under(:foo, 1)
+      describe 'build' do
+        it 'should have a path' do
+          expect(@qb.build).to have_key(:path)
+        end
 
-        expect(@qb.build[:query]).to eq({
-          'parentType' => 'foo',
-          'parentId' => 1
-        })
+        it 'should have a query' do
+          expect(@qb.build).to have_key(:query)
+        end
+
+        it 'should have headers' do
+          expect(@qb.build).to have_key(:headers)
+        end
+
+        it 'should have a body' do
+          expect(@qb.build).to have_key(:body)
+        end
+
+        describe 'options' do
+          describe 'json' do
+            it 'should convert the body to a json string' do
+              query = @qb.data(foo: 'bar').build(:json)
+
+              expect(query[:body]).to eq('{"foo":"bar"}')
+            end
+
+            it 'should add the Content-Type header' do
+              expect(@qb.build(:json)[:headers]).to eq({
+                'Content-Type' => 'application/json'
+              })
+            end
+          end
+        end
+      end
+
+      describe 'method chaining' do
+        it 'should chain #with' do
+          expect(@qb.with().with()).to eq(@qb)
+        end
+
+        it 'should chain #under' do
+          expect(@qb.under(:foo, 'bar').under(:foo, 'baz')).to eq(@qb)
+        end
+
+        it 'should chain #header' do
+          expect(@qb.header('foo', 'bar').header('foo', 'baz')).to eq(@qb)
+        end
+
+        it 'should chain #data' do
+          expect(@qb.data().data()).to eq(@qb)
+        end
+
+        it 'should chain #param' do
+          expect(@qb.param('foo', 'bar').param('foo', 'bar')).to eq(@qb)
+        end
+      end
+
+      describe 'query params' do
+        it 'should append parent query params' do
+          @qb.under(:foo, 1)
+
+          expect(@qb.build[:query]).to eq({
+            'parentType' => 'foo',
+            'parentId' => 1
+          })
+        end
+
+        it 'should append query params' do
+          @qb.param(:foo, 1)
+
+          expect(@qb.build[:query]).to eq({
+            'foo' => 1
+          })
+        end
       end
 
       describe 'headers' do
@@ -41,6 +103,24 @@ module QTest
 
           expect(@qb.build[:headers]).to eq({
             'Content-Type' => 'application/json'
+          })
+        end
+      end
+
+      describe 'data' do
+        it 'should add data for the body' do
+          @qb.data(foo: 'bar')
+
+          expect(@qb.build[:body]).to eq({
+            foo: 'bar'
+          })
+        end
+
+        it 'should be aliased to body' do
+          @qb.body(foo: 'bar')
+
+          expect(@qb.build[:body]).to eq({
+            foo: 'bar'
           })
         end
       end

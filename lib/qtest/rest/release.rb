@@ -3,17 +3,22 @@ module QTest
     module Release
       include QTest::REST::Utils
 
-      def release(args = {})
-        path = build_path('/api/v3/projects',
-                          args[:project],
-                          'releases',
-                          args[:id])
-        get(QTest::Release, path)
+      # GET '/projects/:project/releases/:id'
+      def release(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .release(opts[:id])
+                .build
+        get(query)
       end
 
-      def releases(args = {})
-        path = build_path('/api/v3/projects', args[:project], 'releases')
-        get(QTest::Release, path)
+      # GET '/projects/:project/releases'
+      def releases(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .releases
+                .build
+        get(query)
       end
     end
   end

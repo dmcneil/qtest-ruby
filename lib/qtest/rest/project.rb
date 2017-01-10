@@ -3,21 +3,16 @@ module QTest
     module Project
       include QTest::REST::Utils
 
-      # Get a Project by ID.
-      #
-      # @param id [Integer] ID of the Project
-      # @return [Project]
+      # GET '/project/:id'
       def project(opts = {})
         query = QueryBuilder.new.project(opts[:id]).build
-        get(QTest::Project, query[:path])
+        get(query)
       end
 
-      # Get all Projects.
-      #
-      # @return [Array::Project]
+      # GET '/projects'
       def projects
         query = QueryBuilder.new.projects.build
-        get(QTest::Project, query[:path])
+        get(query)
       end
     end
   end

@@ -39,18 +39,14 @@ module QTest
       # @param opts [Hash] qTest credentials
       # @return [String] authorization token if successful
       def auth(opts = {})
-        options = {
-          headers: {
-            'Content-Type' => 'application/x-www-form-urlencoded'
-          },
-          body: {
-            j_username: opts[:username],
-            j_password: opts[:password]
-          }
-        }
+        query = QueryBuilder.new
+                .with('/api/login')
+                .header(:content_type, 'application/x-www-form-urlencoded')
+                .data(j_username: opts[:username])
+                .data(j_password: opts[:password])
+                .build(:without_api_path)
 
-        response = self.class.post('/api/login', options)
-        @token = handle_response(response, raw: true)
+        @token = post(query, raw: true)
         self.class.send(:headers, 'Authorization' => @token)
 
         @token

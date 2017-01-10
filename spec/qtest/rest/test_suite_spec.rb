@@ -18,7 +18,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
-        expect(@client.test_suite(project: 1, id: 5)).to be_a QTest::TestSuite
+        expect(@client.test_suite(project: 1, id: 5)).to eq({})
       end
 
       it 'should get all test suites for a release' do
@@ -34,9 +34,7 @@ module QTest
 
         test_suites = @client.test_suites(project: 1, release: 5)
 
-        expect(test_suites.count).to eq 2
-        expect(test_suites[0]).to be_a QTest::TestSuite
-        expect(test_suites[1]).to be_a QTest::TestSuite
+        expect(test_suites).to eq([{}, {}])
       end
 
       it 'should get all test suites for a test cycle' do
@@ -52,9 +50,7 @@ module QTest
 
         test_suites = @client.test_suites(project: 1, test_cycle: 3)
 
-        expect(test_suites.count).to eq 2
-        expect(test_suites[0]).to be_a QTest::TestSuite
-        expect(test_suites[1]).to be_a QTest::TestSuite
+        expect(test_suites).to eq([{}, {}])
       end
 
       it 'should create a test suite under a test cycle' do
@@ -69,8 +65,7 @@ module QTest
               'Content-Type' => 'application/json'
             },
             body: {
-              name: 'Suite 1',
-              properties: []
+              name: 'Suite 1'
             }.to_json
           )
           .to_return(status: 200, body: '{}')
@@ -78,10 +73,12 @@ module QTest
         test_suite = {
           project: 1,
           test_cycle: 2,
-          name: 'Suite 1'
+          attributes: {
+            name: 'Suite 1'
+          }
         }
 
-        expect(@client.create_test_suite(test_suite)).to be_a QTest::TestSuite
+        expect(@client.create_test_suite(test_suite)).to eq({})
       end
 
       it 'should create a test suite under a release' do
@@ -92,8 +89,7 @@ module QTest
               'parentType' => 'release'
             },
             headers: {
-              'Authorization' => 'foobar',
-              'Content-Type' => 'application/json'
+              'Authorization' => 'foobar'
             },
             body: {
               name: 'Release 1',
@@ -106,12 +102,14 @@ module QTest
         test_suite = {
           project: 1,
           release: 2,
-          name: 'Release 1',
-          properties: [],
-          target_build: 123
+          attributes: {
+            name: 'Release 1',
+            properties: [],
+            target_build_id: 123
+          }
         }
 
-        expect(@client.create_test_suite(test_suite)).to be_a QTest::TestSuite
+        expect(@client.create_test_suite(test_suite)).to eq({})
       end
 
       it 'should move a test suite to another test cycle' do
@@ -122,19 +120,18 @@ module QTest
               'parentType' => 'test-cycle'
             },
             headers: {
-              'Authorization' => 'foobar',
-              'Content-Type' => 'application/json'
+              'Authorization' => 'foobar'
             }
           )
           .to_return(status: 200, body: '{}')
 
           test_suite = @client.move_test_suite({
             project: 1,
-            test_suite: 2,
+            id: 2,
             test_cycle: 5
           })
 
-          expect(test_suite).to be_a QTest::TestSuite
+          expect(test_suite).to eq({})
       end
 
       it 'should move a test suite to another release' do
@@ -145,19 +142,18 @@ module QTest
               'parentType' => 'release'
             },
             headers: {
-              'Authorization' => 'foobar',
-              'Content-Type' => 'application/json'
+              'Authorization' => 'foobar'
             }
           )
           .to_return(status: 200, body: '{}')
 
           test_suite = @client.move_test_suite({
             project: 1,
-            test_suite: 2,
+            id: 2,
             release: 5
           })
 
-          expect(test_suite).to be_a QTest::TestSuite
+          expect(test_suite).to eq({})
       end
 
       it 'should update a test suite' do
@@ -179,17 +175,19 @@ module QTest
 
         test_suite = @client.update_test_suite({
           project: 1,
-          test_suite: 2,
-          name: 'New name',
-          properties: [
-            {
-              field_id: 1,
-              field_value: 'New value'
-            }
-          ]
+          id: 2,
+          attributes: {
+            name: 'New name',
+            properties: [
+              {
+                field_id: 1,
+                field_value: 'New value'
+              }
+            ]
+          }
         })
 
-        expect(test_suite).to be_a QTest::TestSuite
+        expect(test_suite).to eq({})
       end
     end
   end

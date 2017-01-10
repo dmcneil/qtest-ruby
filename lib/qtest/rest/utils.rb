@@ -1,112 +1,30 @@
 module QTest
   module REST
     module Utils
-      def post(klass, path, args = {})
-        options = {
-          query: args[:query],
-          headers: { 'Content-Type' => 'application/json' },
-          body: args[:body].to_json
-        }
-
-        response = handle_response(self.class.post(path, options))
-        deserialize_response(response, klass)
+      def post(query, opts = {})
+        handle_response(self.class.post(query[:path], query), opts)
       end
 
-      def get(klass, path, args = {})
-        response = handle_response(self.class.get(path, args))
-        deserialize_response(response, klass)
+      def get(query, opts = {})
+        handle_response(self.class.get(query[:path], query), opts)
       end
 
-      def put(klass, path, args = {})
-        options = {
-          query: args[:query],
-          headers: { 'Content-Type' => 'application/json' },
-          body: args[:body].to_json
-        }
-
-        response = handle_response(self.class.put(path, options))
-        deserialize_response(response, klass)
+      def put(query, opts = {})
+        handle_response(self.class.put(query[:path], query), opts)
       end
 
-      def delete(path, args = {})
-        options = {
-          query: args[:query]
-        }
-
-        handle_response(self.class.delete(path, options), raw: true)
+      def delete(query, opts = {})
+        handle_response(self.class.delete(query[:path], query), raw: true)
       end
 
-      # Build a path from the supplied args.
-      #
-      # ## Example
-      #
-      #     @id = 1
-      #     build_path("/api/v3", :projects, @id)
-      #     #=> "/api/v3/projects/1"
-      #
-      # @param args [Array] arguments to build with
-      # @return [String]
-      def build_path(*args)
-        args = args.map(&:to_s).join('/')
-
-        unless args.empty?
-          args = "/#{args}" unless args.start_with?('/')
+      def determine_parent!(opts = {})
+        if opts[:release]
+          opts[:parent] = { type: :release, id: opts[:release] }
+        elsif opts[:test_suite]
+          opts[:parent] = { type: :test_suite, id: opts[:test_suite] }
+        elsif opts[:test_cycle]
+          opts[:parent] = { type: :test_cycle, id: opts[:test_cycle] }
         end
-
-        args
-      end
-
-      # Convert JSON (Hash) to an Object or Objects.
-      #
-      # ## Example
-      #
-      #     json_to({id: 1}, Foo)
-      #
-      # @param json [Hash] json in Hash form
-      # @param klass [Class] Class type to create
-      def deserialize_response(json, klass)
-        if json.is_a? Array
-          json.map do |element|
-            if klass == Hash
-              element
-            else
-              klass.new(element)
-            end
-          end
-        elsif json.is_a? Hash
-          return json if klass == Hash
-          klass.new(json)
-        end
-      end
-
-      # Build a request query parameter.
-      #
-      # ## Example
-      #
-      #     build_parent_query_param(5, :release)
-      #     #=> {'parentId' => 5, 'parentType' => 'release'}
-      #
-      # @param parent_id [Integer/String] id of the parent
-      # @param parent_type [Symbol/String] type of the parent
-      def build_parent_query_param(parent_id, parent_type)
-        parent_type = parent_type.to_s.tr('_', '-') if parent_type.is_a? Symbol
-
-        {
-          'parentId' => parent_id,
-          'parentType' => parent_type
-        }
-      end
-
-      def release_parent_query_param(release_id)
-        build_parent_query_param(release_id, :release)
-      end
-
-      def test_cycle_parent_query_param(test_cycle_id)
-        build_parent_query_param(test_cycle_id, :test_cycle)
-      end
-
-      def test_suite_parent_query_param(test_suite_id)
-        build_parent_query_param(test_suite_id, :test_suite)
       end
 
       # Handle a Response based on its status code.

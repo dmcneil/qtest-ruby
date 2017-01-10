@@ -18,7 +18,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
-        expect(@client.test_run(id: 3, project: 1)).to be_a QTest::TestRun
+        expect(@client.test_run(id: 3, project: 1)).to eq({})
       end
 
       it 'should get all test runs for a release' do
@@ -34,9 +34,7 @@ module QTest
 
         test_runs = @client.test_runs(project: 1, release: 5)
 
-        expect(test_runs.count).to eq 2
-        expect(test_runs[0]).to be_a QTest::TestRun
-        expect(test_runs[1]).to be_a QTest::TestRun
+        expect(test_runs).to eq([{}, {}])
       end
 
       it 'should get all test runs for a test cycle' do
@@ -52,8 +50,7 @@ module QTest
 
         test_runs = @client.test_runs(project: 1, test_cycle: 3)
 
-        expect(test_runs.count).to eq 1
-        expect(test_runs.first).to be_a QTest::TestRun
+        expect(test_runs).to eq([{}])
       end
 
       it 'should get all test runs for a test suite' do
@@ -69,9 +66,7 @@ module QTest
 
         test_runs = @client.test_runs(project: 1, test_suite: 6)
 
-        expect(test_runs.count).to eq 2
-        expect(test_runs[0]).to be_a QTest::TestRun
-        expect(test_runs[1]).to be_a QTest::TestRun
+        expect(test_runs).to eq([{}, {}])
       end
 
       it 'should create a test run under a release' do
@@ -97,13 +92,15 @@ module QTest
         test_run = {
           project: 1,
           release: 2,
-          name: 'Run 1',
-          test_case: {
-            test_case_version_id: 5
+          attributes: {
+            name: 'Run 1',
+            test_case: {
+              test_case_version_id: 5
+            }
           }
         }
 
-        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+        expect(@client.create_test_run(test_run)).to eq({})
       end
 
       it 'should create a test run under a test cycle' do
@@ -129,13 +126,15 @@ module QTest
         test_run = {
           project: 1,
           test_cycle: 2,
-          name: 'Run 1',
-          test_case: {
-            test_case_version_id: 5
+          attributes: {
+            name: 'Run 1',
+            test_case: {
+              test_case_version_id: 5
+            }
           }
         }
 
-        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+        expect(@client.create_test_run(test_run)).to eq({})
       end
 
       it 'should create a test run under a test suite' do
@@ -161,13 +160,15 @@ module QTest
         test_run = {
           project: 1,
           test_suite: 2,
-          name: 'Run 1',
-          test_case: {
-            test_case_version_id: 5
+          attributes: {
+            name: 'Run 1',
+            test_case: {
+              test_case_version_id: 5
+            }
           }
         }
 
-        expect(@client.create_test_run(test_run)).to be_a QTest::TestRun
+        expect(@client.create_test_run(test_run)).to eq({})
       end
 
       it 'should move a test run to another release' do
@@ -181,9 +182,9 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-        expect(@client.move_test_run(id: 9,
-                                     project: 1,
-                                     release: 6)).to be_a QTest::TestRun
+        test_run = @client.move_test_run(id: 9, project: 1, release: 6)
+
+        expect(test_run).to eq({})
       end
 
       it 'should update a test run' do
@@ -196,9 +197,15 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-        expect(@client.update_test_run(id: 9,
-                                       project: 1,
-                                       name: 'New name')).to be_a QTest::TestRun
+        test_run = {
+          id: 9,
+          project: 1,
+          attributes: {
+            name: 'New name'
+          }
+        }
+
+        expect(@client.update_test_run(test_run)).to eq({})
       end
 
       it 'should delete a test run' do
@@ -218,7 +225,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '[{}, {}]')
 
-        expect(@client.execution_statuses(project: 1).count).to eq 2
+        expect(@client.execution_statuses(project: 1)).to eq([{}, {}])
       end
 
       it 'should get test run fields' do
@@ -228,7 +235,7 @@ module QTest
 
         fields = @client.test_run_fields(project: 1)
 
-        expect(fields.count).to be 2
+        expect(fields).to eq([{}, {}])
       end
     end
   end
