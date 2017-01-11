@@ -13,9 +13,11 @@ module QTest
     end
 
     def all(type, opts = {})
-      resources = client.send(to_plural(symbolize(type)), opts)
+      type_formatted = type.to_s.demodulize.underscore.pluralize
+
+      resources = client.send(type_formatted, opts)
       resources.map do |resource|
-        resource = to_class(type).new(resource)
+        resource = type.new(resource)
         transfer_relationships(resource, opts)
 
         resource
@@ -25,7 +27,7 @@ module QTest
     private
 
     def transfer_relationships(resource, opts = {})
-      self_iv = :"@#{symbolize(self.class)}"
+      self_iv = :"@#{self.class.to_s.demodulize.underscore}"
       if resource.instance_variable_defined?(self_iv)
         resource.instance_variable_set(self_iv, self)
       end
@@ -41,15 +43,7 @@ module QTest
     end
 
     def symbolize(value)
-      value.to_s.demodulize.downcase.underscore.to_sym
-    end
-
-    def to_plural(resource)
-      resource.to_s.pluralize
-    end
-
-    def to_class(resource)
-      resource.to_s.classify.constantize
+      value.to_s.demodulize.underscore
     end
   end
 end

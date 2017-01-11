@@ -39,24 +39,24 @@ module QTest
   describe Base do
     before do
       @client = StubClient.new
-      @base = Z::Foo.new
+      @foo = Z::Foo.new
     end
 
     it 'should be able to get all resources of a type' do
-      foos = @base.bars
+      foos = @foo.bars
 
       expect(foos).to be_a Array
       expect(foos.first).to be_a Z::Bar
     end
 
     it 'should transfer the caller to the new type' do
-      bars = @base.bars
+      bars = @foo.bars
 
-      expect(bars.first.foo).to eq @base
+      expect(bars.first.foo).to eq @foo
     end
 
     it 'should transfer types in the opts to the new type' do
-      bazs = @base.bars(project: "not_nil")
+      bazs = @foo.bars(project: "not_nil")
 
       expect(bazs.first.project).to eq "project"
     end

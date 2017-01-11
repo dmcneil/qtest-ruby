@@ -10,18 +10,7 @@ module QTest
     end
 
     def test_runs
-      test_runs = client.test_runs({
-        project: @project.id,
-        test_suite: @id
-      })
-
-      test_runs.map do |test_run|
-        test_run[:project] = @project
-        test_run[:test_suite] = self
-        test_run[:release] = @release
-
-        QTest::TestRun.new(test_run)
-      end
+      all(QTest::TestRun, project: @project.id, test_suite: @id)
     end
 
     def move(opts = {})

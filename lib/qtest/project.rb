@@ -32,12 +32,7 @@ module QTest
     #
     # @return [Array[QTest::Release]]
     def releases
-      releases = client.releases(project: @id)
-      releases.map do |release|
-        release[:project] = self
-
-        QTest::Release.new(release)
-      end
+      all(QTest::Release, project: @id)
     end
   end
 end

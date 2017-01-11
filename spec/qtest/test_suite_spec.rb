@@ -22,7 +22,6 @@ module QTest
 
         expect(test_runs).to be_a Array
         expect(test_runs.first).to be_a QTest::TestRun
-        expect(test_runs.first.release).to eq @release
         expect(test_runs.first.project).to eq @project
         expect(test_runs.first.test_suite).to eq @test_suite
       end

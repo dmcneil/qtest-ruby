@@ -11,28 +11,14 @@ module QTest
     #
     # @return [Array[QTest::TestCycle]]
     def test_cycles
-      test_cycles = client.test_cycles(project: @project.id, release: @id)
-
-      test_cycles.map do |test_cycle|
-        test_cycle[:release] = self
-        test_cycle[:project] = @project
-
-        QTest::TestCycle.new(test_cycle)
-      end
+      all(QTest::TestCycle, project: @project.id, release: @id)
     end
 
     # Get all Test Suites under the Release.
     #
     # @return [Array[QTest::TestSuite]]
     def test_suites
-      test_suites = client.test_suites(project: @project.id, release: @id)
-
-      test_suites.map do |test_suite|
-        test_suite[:release] = self
-        test_suite[:project] = @project
-
-        QTest::TestSuite.new(test_suite)
-      end
+      all(QTest::TestSuite, project: @project.id, release: @id)
     end
 
     # Create a Test Suite under the Release.
