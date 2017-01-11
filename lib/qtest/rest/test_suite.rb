@@ -14,6 +14,7 @@ module QTest
         get(query)
       end
 
+      # GET '/projects/:project/test-suites?parentType=?&parentId=?'
       def test_suites(opts = {})
         query = QueryBuilder.new
                 .project(opts[:project])

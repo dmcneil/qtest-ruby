@@ -37,6 +37,8 @@ module QTest
       end
 
       def with(*paths)
+        paths.map! { |path| path.to_s.gsub('_', '-') }
+
         @path << paths
         self
       end
@@ -90,7 +92,7 @@ module QTest
         end
 
         @query.merge!(@parent)
-
+        sanitize_params!
         sanitize_body!
         encode_body!
 
@@ -146,6 +148,10 @@ module QTest
           header(:content_type, 'application/json')
           @body = @body.to_json if @options.include?(:json)
         end
+      end
+
+      def sanitize_params!
+        @query.reject! { |_k, v| v.nil? }
       end
     end
   end

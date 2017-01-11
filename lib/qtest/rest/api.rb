@@ -4,6 +4,7 @@ require_relative 'release'
 require_relative 'test_cycle'
 require_relative 'test_run'
 require_relative 'test_suite'
+require_relative 'test_case'
 
 module QTest
   module REST
@@ -15,6 +16,7 @@ module QTest
       include QTest::REST::TestCycle
       include QTest::REST::TestRun
       include QTest::REST::TestSuite
+      include QTest::REST::TestCase
 
       BASE_PATH = '/api/v3'
 
@@ -51,6 +53,15 @@ module QTest
         self.class.send(:headers, 'Authorization' => @token)
 
         @token
+      end
+
+      def fields(opts = {})
+        query = QueryBuilder.new
+                .project(opts[:project])
+                .with(:settings, opts[:type], :fields)
+                .build
+
+        get(query)
       end
     end
   end
