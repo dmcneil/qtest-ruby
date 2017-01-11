@@ -11,7 +11,7 @@ module QTest
       end
 
       it 'should ignore the api base url with an option' do
-        expect(@qb.build(:without_api_path)[:path]).to eq('')
+        expect(@qb.options(:without_api_path).build[:path]).to eq('')
       end
 
       describe 'build' do
@@ -34,13 +34,13 @@ module QTest
         describe 'options' do
           describe 'json' do
             it 'should convert the body to a json string' do
-              query = @qb.data(foo: 'bar').build(:json)
+              query = @qb.options(:json).data(foo: 'bar').build
 
               expect(query[:body]).to eq('{"foo":"bar"}')
             end
 
             it 'should add the Content-Type header' do
-              expect(@qb.build(:json)[:headers]).to eq({
+              expect(@qb.options(:json).build[:headers]).to eq({
                 'Content-Type' => 'application/json'
               })
             end
@@ -53,8 +53,8 @@ module QTest
           expect(@qb.with().with()).to eq(@qb)
         end
 
-        it 'should chain #under' do
-          expect(@qb.under(:foo, 'bar').under(:foo, 'baz')).to eq(@qb)
+        it 'should chain #parent' do
+          expect(@qb.parent(foo: 'bar').parent(foo: 'baz')).to eq(@qb)
         end
 
         it 'should chain #header' do
@@ -70,16 +70,18 @@ module QTest
         end
       end
 
-      describe 'query params' do
+      describe '#parent' do
         it 'should append parent query params' do
-          @qb.under(:foo, 1)
+          @qb.parent(foo: 1)
 
           expect(@qb.build[:query]).to eq({
             'parentType' => 'foo',
             'parentId' => 1
           })
         end
+      end
 
+      describe 'query params' do
         it 'should append query params' do
           @qb.param(:foo, 1)
 

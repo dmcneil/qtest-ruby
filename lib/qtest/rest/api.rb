@@ -40,11 +40,12 @@ module QTest
       # @return [String] authorization token if successful
       def auth(opts = {})
         query = QueryBuilder.new
+                .options(:without_api_path)
                 .with('/api/login')
                 .header(:content_type, 'application/x-www-form-urlencoded')
                 .data(j_username: opts[:username])
                 .data(j_password: opts[:password])
-                .build(:without_api_path)
+                .build
 
         @token = post(query, raw: true)
         self.class.send(:headers, 'Authorization' => @token)

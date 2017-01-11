@@ -17,16 +17,6 @@ module QTest
         handle_response(self.class.delete(query[:path], query), raw: true)
       end
 
-      def determine_parent!(opts = {})
-        if opts[:release]
-          opts[:parent] = { type: :release, id: opts[:release] }
-        elsif opts[:test_suite]
-          opts[:parent] = { type: :test_suite, id: opts[:test_suite] }
-        elsif opts[:test_cycle]
-          opts[:parent] = { type: :test_cycle, id: opts[:test_cycle] }
-        end
-      end
-
       # Handle a Response based on its status code.
       #
       # By default, the Response body is assumed to be parsed

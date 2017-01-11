@@ -166,7 +166,7 @@ module QTest
           .to_return(status: 200, body: '{}')
 
         expect do
-          @client.delete_test_cycle(id: 9, project: 1, params: {force: true})
+          @client.delete_test_cycle(id: 9, project: 1, force: true)
         end.to_not raise_error
       end
     end

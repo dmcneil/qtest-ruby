@@ -13,15 +13,27 @@ module QTest
         :test_step
       ]
 
-      def initialize
+      def initialize(*opts)
         RESOURCES.each do |resource|
           define_resource(resource)
           define_resources(resource)
         end
+
+        @options = opts
+
         @path = []
+        @body = {}
         @query = {}
         @headers = {}
-        @body = {}
+        @parent = {}
+      end
+
+      def options(*opts)
+        opts.each do |opt|
+          @options << opt unless @options.include?(opt)
+        end
+
+        self
       end
 
       def with(*paths)
@@ -29,49 +41,64 @@ module QTest
         self
       end
 
-      def under(resource, id)
-        param('parentType', resource.to_s.dasherize)
-        param('parentId', id)
+      def parent(value)
+        key = value.keys[0]
+        @parent = {
+          'parentType' => key.to_s.dasherize,
+          'parentId' => value[key]
+        }
+
         self
       end
-      alias_method :parent, :under
+      alias_method :under, :parent
 
       def header(key, value)
         key = encode_for_header(key)
         @headers[key] = value
+
         self
       end
 
       def data(params = {})
         @body.merge!(params)
+
         self
       end
       alias_method :body, :data
 
       def param(key, value)
         @query[key.to_s] = value
+
         self
       end
 
-      def build(*opts)
-        unless opts.include?(:without_api_path)
+      def determine_parent!(opts = {})
+        if opts[:release]
+          parent(release: opts[:release])
+        elsif opts[:test_suite]
+          parent(test_suite: opts[:test_suite])
+        elsif opts[:test_cycle]
+          parent(test_cycle: opts[:test_cycle])
+        end
+
+        self
+      end
+
+      def build
+        unless @options.include?(:without_api_path)
           @path = [QTest::REST::API::BASE_PATH, @path].flatten
         end
 
-        sanitize_body!
+        @query.merge!(@parent)
 
-        if opts.include?(:json)
-          header(:content_type, 'application/json')
-          body = @body.to_json
-        else
-          body = @body
-        end
+        sanitize_body!
+        encode_body!
 
         {
           path: @path.join('/'),
           query: @query,
           headers: @headers,
-          body: body
+          body: @body
         }
       end
 
@@ -90,6 +117,7 @@ module QTest
 
           @path << encode_for_path(resource)
           @path << value
+
           self
         end
       end
@@ -111,6 +139,13 @@ module QTest
 
       def sanitize_body!
         @body.reject! { |_k, v| v.nil? }
+      end
+
+      def encode_body!
+        if @options.include?(:json)
+          header(:content_type, 'application/json')
+          @body = @body.to_json if @options.include?(:json)
+        end
       end
     end
   end

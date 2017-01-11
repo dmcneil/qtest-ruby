@@ -18,10 +18,8 @@ module QTest
         query = QueryBuilder.new
                 .project(opts[:project])
                 .test_cycles
-
-        determine_parent!(opts)
-        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
-        query = query.build
+                .determine_parent!(opts)
+                .build
 
         get(query)
       end
@@ -29,13 +27,12 @@ module QTest
       # POST '/projects/:project/test-cycles'
       def create_test_cycle(opts = {})
         query = QueryBuilder.new
+                .options(:json)
                 .project(opts[:project])
                 .test_cycles
                 .data(opts[:attributes])
-
-        determine_parent!(opts)
-        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
-        query = query.build(:json)
+                .determine_parent!(opts)
+                .build
 
         post(query)
       end
@@ -45,10 +42,8 @@ module QTest
         query = QueryBuilder.new
                 .project(opts[:project])
                 .test_cycle(opts[:id])
-
-        determine_parent!(opts)
-        query.under(opts[:parent][:type], opts[:parent][:id]) if opts[:parent]
-        query = query.build
+                .determine_parent!(opts)
+                .build
 
         put(query)
       end
@@ -56,10 +51,11 @@ module QTest
       # PUT '/projects/:project/test-cycles/:id'
       def update_test_cycle(opts = {})
         query = QueryBuilder.new
+                .options(:json)
                 .project(opts[:project])
                 .test_cycle(opts[:id])
                 .data(opts[:attributes])
-                .build(:json)
+                .build
 
         put(query)
       end
@@ -70,7 +66,7 @@ module QTest
                 .project(opts[:project])
                 .test_cycle(opts[:id])
 
-        query.param(:force, opts[:params][:force] || false) if opts[:params]
+        query.param(:force, opts[:force] || false) if opts[:force]
         query = query.build
 
         delete(query)
