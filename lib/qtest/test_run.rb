@@ -9,5 +9,12 @@ module QTest
       @project = opts[:project]
       @test_suite = opts[:test_suite]
     end
+
+    # Get all Test Cases under the Test Cycle.
+    #
+    # @return [Array[QTest::TestCase]]
+    def test_cases
+      all(QTest::TestCase, project: @project.id, test_run: @id)
+    end
   end
 end

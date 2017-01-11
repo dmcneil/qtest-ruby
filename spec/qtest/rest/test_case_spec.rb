@@ -91,7 +91,7 @@ module QTest
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
-        expect(@client.test_case_step(project: 1, test_case: 2, id: 3))
+        expect(@client.test_step(project: 1, test_case: 2, id: 3))
           .to eq({})
       end
 

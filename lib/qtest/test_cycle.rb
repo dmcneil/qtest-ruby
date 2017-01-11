@@ -12,18 +12,6 @@ module QTest
     # Get all Test Cycles under the Test Cycle.
     #
     # @return [Array[QTest::TestCycle]]
-    # def test_cycles
-    #   test_cycles = client.test_cycles(project: @project.id,
-    #                                    test_cycle: @id)
-    #
-    #   test_cycles.map do |test_cycle|
-    #     test_cycle[:project] = @project
-    #     test_cycle[:test_cycle] = self
-    #
-    #     QTest::TestCycle.new(test_cycle)
-    #   end
-    # end
-
     def test_cycles
       all(QTest::TestCycle, project: @project.id, test_cycle: @id)
     end

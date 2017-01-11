@@ -22,6 +22,8 @@ module QTest
                 .param('expandSteps', opts[:expand_steps])
                 .build
 
+        puts query
+
         get(query)
       end
 
@@ -45,13 +47,12 @@ module QTest
         get(query)
       end
 
-      def test_case_step(opts = {})
+      def test_step(opts = {})
         query = QueryBuilder.new
                 .project(opts[:project])
                 .test_case(opts[:test_case])
                 .with(:test_steps, opts[:id])
                 .build
-                
 
         get(query)
       end
