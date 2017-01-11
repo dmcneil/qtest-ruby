@@ -22,10 +22,7 @@ module QTest
     #
     # @return [QTest::Release]
     def release(opts = {})
-      release = client.release(project: @id, id: opts[:id])
-      release[:project] = self
-
-      QTest::Release.new(release)
+      unique(QTest::Release, project: @id, id: opts[:id])
     end
 
     # Get all Releases under the Project.

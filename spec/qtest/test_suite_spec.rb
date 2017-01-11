@@ -50,7 +50,7 @@ module QTest
           .with(project: 1, test_cycle: 2)
           .and_return({})
 
-        expect(@test_suite.move(test_cycle: 2)).to eq @test_suite
+        expect(@test_suite.move_to(test_cycle: 2)).to eq @test_suite
         expect(@test_suite.test_cycle).to be_a QTest::TestCycle
       end
 
@@ -67,7 +67,7 @@ module QTest
           .with(project: 1, release: 2)
           .and_return({})
 
-        expect(@test_suite.move(release: 2)).to eq @test_suite
+        expect(@test_suite.move_to(release: 2)).to eq @test_suite
         expect(@test_suite.release).to be_a QTest::Release
       end
     end

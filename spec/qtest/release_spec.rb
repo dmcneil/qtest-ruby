@@ -84,8 +84,7 @@ module QTest
                   field_id: 2,
                   field_value: 'Field two'
                 }
-              ],
-              target_build_id: nil
+              ]
             }
           })
           .and_return({})

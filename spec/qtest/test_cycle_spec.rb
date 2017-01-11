@@ -37,8 +37,7 @@ module QTest
             project: 1,
             test_cycle: 4,
             attributes: {
-              name: 'Foo',
-              description: nil
+              name: 'Foo'
             }
           })
           .and_return({})

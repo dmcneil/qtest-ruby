@@ -14,6 +14,17 @@ class Z::Foo < QTest::Base
       project: @project
     })
   end
+
+  def bar(opts = {})
+    unique(Z::Bar, {
+      foo: @id,
+      project: @project
+    })
+  end
+
+  def create_bar(opts = {})
+    create(Z::Bar, opts)
+  end
 end
 
 class Z::Bar
@@ -32,6 +43,14 @@ class StubClient < QTest::Client
 
   def bars(opts = {})
     [{}]
+  end
+
+  def bar(opts = {})
+    {}
+  end
+
+  def create_bar(opts = {})
+    {}
   end
 end
 
@@ -59,6 +78,19 @@ module QTest
       bazs = @foo.bars(project: "not_nil")
 
       expect(bazs.first.project).to eq "project"
+    end
+
+    it 'should get a single, unique type' do
+      bar = @foo.bar
+
+      expect(bar).to be_a Z::Bar
+    end
+
+    it 'should create a new type' do
+      bar = @foo.create_bar(name: 'foo', description: 'bar')
+
+      expect(bar).to be_a Z::Bar
+      expect(bar.foo).to eq @foo
     end
   end
 end

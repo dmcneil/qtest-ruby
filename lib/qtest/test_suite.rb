@@ -9,12 +9,18 @@ module QTest
       @release = opts[:release]
     end
 
+    # Get all Test Runs for the Test Suite.
+    #
+    # @return [Array[QTest::TestRun]]
     def test_runs
       all(QTest::TestRun, project: @project.id, test_suite: @id)
     end
 
-    def move(opts = {})
-      client.move_test_suite({
+    # Move the Test Suite under a different parent.
+    #
+    # @return [QTest::TestSuite]
+    def move_to(opts = {})
+      move({
         project: @project.id,
         test_suite: @id,
         release: opts[:release],
@@ -22,22 +28,17 @@ module QTest
       })
 
       if opts[:release]
-        release = client.release({
-          project: @project.id,
-          release: opts[:release]
-        })
-
-         @release = QTest::Release.new(release)
+        @release = unique(QTest::Release,
+                          project: @project.id,
+                          release: opts[:release])
       elsif opts[:test_cycle]
-        test_cycle = client.test_cycle({
-          project: @project.id,
-          test_cycle: opts[:test_cycle]
-        })
-
-        @test_cycle = QTest::TestCycle.new(test_cycle)
+        @test_cycle = unique(QTest::TestCycle,
+                             project: @project.id,
+                             test_cycle: opts[:test_cycle])
       end
 
       self
     end
+    alias_method :move_under, :move_to
   end
 end

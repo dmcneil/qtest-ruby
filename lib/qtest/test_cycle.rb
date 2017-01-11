@@ -29,18 +29,10 @@ module QTest
     end
 
     def create_test_cycle(opts = {})
-      test_cycle = client.create_test_cycle({
-        project: @project.id,
-        test_cycle: @id,
-        attributes: {
-          name: opts[:name],
-          description: opts[:description]
-        }
-      })
-      test_cycle[:project] = @project
-      test_cycle[:test_cycle] = self
-
-      QTest::TestCycle.new(test_cycle)
+      create(QTest::TestCycle,
+             project: @project.id,
+             test_cycle: @id,
+             attributes: opts)
     end
 
     # Get all Test Suites under the Test Cycle.
@@ -54,17 +46,10 @@ module QTest
     #
     # @return [QTest::TestSuite]
     def create_test_suite(opts = {})
-      test_suite = client.create_test_suite({
-        project: @project.id,
-        test_cycle: @id,
-        attributes: {
-          name: opts[:name]
-        }
-      })
-      test_suite[:project] = @project
-      test_suite[:test_cycle] = self
-
-      QTest::TestSuite.new(test_suite)
+      create(QTest::TestSuite,
+             project: @project.id,
+             test_cycle: @id,
+             attributes: opts)
     end
 
     # Get all Test Runs under the Test Cycle.
