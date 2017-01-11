@@ -10,7 +10,7 @@ module QTest
     describe 'class methods' do
       it 'should find by id' do
         expect(@client).to receive(:project)
-                           .with(1)
+                           .with(id: 1)
                            .and_return({})
 
         project = QTest::Project.find_by(id: 1)

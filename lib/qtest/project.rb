@@ -2,7 +2,7 @@ module QTest
   class Project < Base
     class << self
       def find_by(opts = {})
-        project = client.project(opts[:id]) if opts[:id]
+        project = client.project(id: opts[:id]) if opts[:id]
 
         self.new(project)
       end
