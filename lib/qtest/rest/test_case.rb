@@ -22,8 +22,6 @@ module QTest
                 .param('expandSteps', opts[:expand_steps])
                 .build
 
-        puts query
-
         get(query)
       end
 
