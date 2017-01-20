@@ -16,8 +16,8 @@ module QTest
         query = QueryBuilder.new
                 .project(opts[:project])
                 .test_cases
-                .determine_parent!(opts)
-                .param(:page, opts[:page])
+                .param('parentId', opts[:module])
+                .param('page', opts[:page])
                 .param('expandProps', opts[:expand_properties])
                 .param('expandSteps', opts[:expand_steps])
                 .build

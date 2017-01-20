@@ -31,5 +31,23 @@ module QTest
     def releases
       all(QTest::Release, project: @id)
     end
+
+    # Get a specific Module under the Project.
+    #
+    # ## Options
+    #
+    #     * :id - the Module ID
+    #
+    # @return [QTest::Module]
+    def module(opts = {})
+      unique(QTest::Module, project: @id, id: opts[:id])
+    end
+
+    # Get all Releases under the Project.
+    #
+    # @return [Array[QTest::Module]]
+    def modules
+      all(QTest::Module, project: @id)
+    end
   end
 end

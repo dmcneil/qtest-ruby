@@ -1,14 +1,11 @@
 module QTest
   class TestCase < QTest::Base
-    attr_accessor :id, :project, :test_cycle, :release, :test_suite,
-                  :test_run
+    attr_accessor :id, :project, :module, :test_run
 
     def initialize(opts = {})
       @id = opts[:id]
       @project = opts[:project]
-      @test_cycle = opts[:test_cycle]
-      @release = opts[:release]
-      @test_suite = opts[:test_suite]
+      @module = opts[:module]
       @test_run = opts[:test_run]
     end
 

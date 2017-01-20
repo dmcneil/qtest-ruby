@@ -23,46 +23,17 @@ module QTest
         expect(@client.test_case(project: 1, id: 5)).to eq({})
       end
 
-      it 'should get all test cases under a release' do
+      it 'should get all test cases under a module' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-cases')
           .with({
             headers: { 'Authorization' => 'foobar' },
             query: {
-              'parentType' => 'release',
               'parentId' => 1
             }
           })
           .to_return(status: 200, body: '[{}]')
 
-        expect(@client.test_cases(project: 1, release: 1)).to eq([{}])
-      end
-
-      it 'should get all test cases under a test cycle' do
-        stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-cases')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'parentType' => 'test-cycle',
-              'parentId' => 1
-            }
-          })
-          .to_return(status: 200, body: '[{}]')
-
-        expect(@client.test_cases(project: 1, test_cycle: 1)).to eq([{}])
-      end
-
-      it 'should get all test cases under a test suite' do
-        stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-cases')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'parentType' => 'test-suite',
-              'parentId' => 1
-            }
-          })
-          .to_return(status: 200, body: '[{}]')
-
-        expect(@client.test_cases(project: 1, test_suite: 1)).to eq([{}])
+        expect(@client.test_cases(project: 1, module: 1)).to eq([{}])
       end
 
       it 'should get a specific version of a test case' do

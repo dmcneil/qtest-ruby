@@ -22,7 +22,6 @@ module QTest
     describe 'releases' do
       before do
         @project = QTest::Project.new(id: 1)
-        @release = QTest::Release.new(id: 5)
       end
 
       it 'should get all releases' do
@@ -46,6 +45,35 @@ module QTest
 
         expect(release).to be_a QTest::Release
         expect(release.project).to eq @project
+      end
+    end
+
+    describe 'modules' do
+      before do
+        @project = QTest::Project.new(id: 1)
+      end
+
+      it 'should get all modules' do
+        expect(@client).to receive(:modules)
+          .with(project: 1)
+          .and_return([{}])
+
+        modules = @project.modules
+
+        expect(modules).to be_a Array
+        expect(modules.first).to be_a QTest::Module
+        expect(modules.first.project).to eq @project
+      end
+
+      it 'should get a specific module' do
+        expect(@client).to receive(:module)
+          .with(project: 1, id: 5)
+          .and_return({})
+
+        _module = @project.module(id: 5)
+
+        expect(_module).to be_a QTest::Module
+        expect(_module.project).to eq @project
       end
     end
   end

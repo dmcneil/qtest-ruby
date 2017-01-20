@@ -10,7 +10,8 @@ module QTest
         :test_cycle,
         :test_suite,
         :test_run,
-        :test_step
+        :test_step,
+        :module
       ]
 
       def initialize(*opts)

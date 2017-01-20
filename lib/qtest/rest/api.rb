@@ -5,6 +5,7 @@ require_relative 'test_cycle'
 require_relative 'test_run'
 require_relative 'test_suite'
 require_relative 'test_case'
+require_relative 'module'
 
 module QTest
   module REST
@@ -17,6 +18,7 @@ module QTest
       include QTest::REST::TestRun
       include QTest::REST::TestSuite
       include QTest::REST::TestCase
+      include QTest::REST::Module
 
       BASE_PATH = '/api/v3'
 
@@ -33,13 +35,10 @@ module QTest
       # If successful, an API token is returned and used on future
       # requests.
       #
-      # ## options
-      #
-      #     * :username - qTest username
-      #     * :password - qTest password
-      #
-      # @param opts [Hash] qTest credentials
-      # @return [String] authorization token if successful
+      # @param opts [Hash]
+      # @option username [String] qTest username
+      # @option password [String] qTest password
+      # @return [String] authorization token
       def auth(opts = {})
         query = QueryBuilder.new
                 .options(:without_api_path)
