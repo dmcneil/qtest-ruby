@@ -6,6 +6,28 @@ module QTest
       @test_case = QTest::TestCase.new(id: 2, project: @project)
     end
 
+    describe 'attributes' do
+      it 'should have an id' do
+        test_case = QTest::TestCase.new(id: 1)
+        expect(test_case.id).to eq 1
+      end
+
+      it 'should have a name' do
+        test_case = QTest::TestCase.new(name: 'Foo')
+        expect(test_case.name).to eq 'Foo'
+      end
+
+      it 'should have a tag' do
+        test_case = QTest::TestCase.new(tag: 'TC-FOO')
+        expect(test_case.tag).to eq 'TC-FOO'
+      end
+
+      it 'should accept the :pid option for a tag' do
+        test_case = QTest::TestCase.new(pid: 'TC-FOO')
+        expect(test_case.tag).to eq 'TC-FOO'
+      end
+    end
+
     it 'should get a test step by id' do
       expect(@client).to receive(:test_step)
         .with(project: 1, test_case: 2, id: 3)
