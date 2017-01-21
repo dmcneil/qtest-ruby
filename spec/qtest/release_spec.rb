@@ -29,20 +29,16 @@ module QTest
 
       it 'should create a test cycle' do
         expect(@client).to receive(:create_test_cycle)
-          .with({
-            project: 1,
-            release: 5,
-            attributes: {
-              name: 'A test cycle',
-              description: 'A description'
-            }
-          })
+          .with(project: 1,
+                release: 5,
+                attributes: {
+                  name: 'A test cycle',
+                  description: 'A description'
+                })
           .and_return({})
 
-        test_cycle = @release.create_test_cycle({
-          name: 'A test cycle',
-          description: 'A description'
-        })
+        test_cycle = @release.create_test_cycle(name: 'A test cycle',
+                                                description: 'A description')
 
         expect(test_cycle).to be_a QTest::TestCycle
         expect(test_cycle.release).to eq @release
@@ -70,38 +66,34 @@ module QTest
 
       it 'should create a test suite' do
         expect(@client).to receive(:create_test_suite)
-          .with({
-            project: 1,
-            release: 5,
-            attributes: {
-              name: 'A test suite',
-              properties: [
-                {
-                  field_id: 1,
-                  field_value: 'Field one',
-                },
-                {
-                  field_id: 2,
-                  field_value: 'Field two'
-                }
-              ]
-            }
-          })
+          .with(project: 1,
+                release: 5,
+                attributes: {
+                  name: 'A test suite',
+                  properties: [
+                    {
+                      field_id: 1,
+                      field_value: 'Field one'
+                    },
+                    {
+                      field_id: 2,
+                      field_value: 'Field two'
+                    }
+                  ]
+                })
           .and_return({})
 
-        test_suite = @release.create_test_suite({
-          name: 'A test suite',
-          properties: [
-            {
-              field_id: 1,
-              field_value: 'Field one'
-            },
-            {
-              field_id: 2,
-              field_value: 'Field two'
-            }
-          ]
-        })
+        test_suite = @release.create_test_suite(name: 'A test suite',
+                                                properties: [
+                                                  {
+                                                    field_id: 1,
+                                                    field_value: 'Field one'
+                                                  },
+                                                  {
+                                                    field_id: 2,
+                                                    field_value: 'Field two'
+                                                  }
+                                                ])
 
         expect(test_suite).to be_a QTest::TestSuite
         expect(test_suite.release).to eq @release

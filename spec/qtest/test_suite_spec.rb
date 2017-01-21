@@ -38,12 +38,10 @@ module QTest
     describe 'test suites' do
       it 'should move a test suite to another test cycle' do
         expect(@client).to receive(:move_test_suite)
-          .with({
-            project: 1,
-            test_cycle: 2,
-            test_suite: @test_suite.id,
-            release: nil
-          })
+          .with(project: 1,
+                test_cycle: 2,
+                test_suite: @test_suite.id,
+                release: nil)
           .and_return({})
 
         expect(@client).to receive(:test_cycle)
@@ -56,12 +54,10 @@ module QTest
 
       it 'should move a test suite to another release' do
         expect(@client).to receive(:move_test_suite)
-          .with({
-            project: 1,
-            release: 2,
-            test_suite: @test_suite.id,
-            test_cycle: nil
-          })
+          .with(project: 1,
+                release: 2,
+                test_suite: @test_suite.id,
+                test_cycle: nil)
           .and_return({})
         expect(@client).to receive(:release)
           .with(project: 1, release: 2)

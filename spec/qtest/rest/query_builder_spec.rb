@@ -40,9 +40,7 @@ module QTest
             end
 
             it 'should add the Content-Type header' do
-              expect(@qb.options(:json).build[:headers]).to eq({
-                'Content-Type' => 'application/json'
-              })
+              expect(@qb.options(:json).build[:headers]).to eq('Content-Type' => 'application/json')
             end
           end
         end
@@ -50,7 +48,7 @@ module QTest
 
       describe 'method chaining' do
         it 'should chain #with' do
-          expect(@qb.with().with()).to eq(@qb)
+          expect(@qb.with.with).to eq(@qb)
         end
 
         it 'should chain #parent' do
@@ -62,7 +60,7 @@ module QTest
         end
 
         it 'should chain #data' do
-          expect(@qb.data().data()).to eq(@qb)
+          expect(@qb.data.data).to eq(@qb)
         end
 
         it 'should chain #param' do
@@ -74,10 +72,8 @@ module QTest
         it 'should append parent query params' do
           @qb.parent(foo: 1)
 
-          expect(@qb.build[:query]).to eq({
-            'parentType' => 'foo',
-            'parentId' => 1
-          })
+          expect(@qb.build[:query]).to eq('parentType' => 'foo',
+                                          'parentId' => 1)
         end
       end
 
@@ -85,9 +81,7 @@ module QTest
         it 'should append query params' do
           @qb.param(:foo, 1)
 
-          expect(@qb.build[:query]).to eq({
-            'foo' => 1
-          })
+          expect(@qb.build[:query]).to eq('foo' => 1)
         end
       end
 
@@ -95,17 +89,13 @@ module QTest
         it 'should add symbol headers' do
           @qb.header(:content_type, 'application/json')
 
-          expect(@qb.build[:headers]).to eq({
-            'Content-Type' => 'application/json'
-          })
+          expect(@qb.build[:headers]).to eq('Content-Type' => 'application/json')
         end
 
         it 'should add string headers' do
           @qb.header('Content-Type', 'application/json')
 
-          expect(@qb.build[:headers]).to eq({
-            'Content-Type' => 'application/json'
-          })
+          expect(@qb.build[:headers]).to eq('Content-Type' => 'application/json')
         end
       end
 
@@ -113,17 +103,13 @@ module QTest
         it 'should add data for the body' do
           @qb.data(foo: 'bar')
 
-          expect(@qb.build[:body]).to eq({
-            foo: 'bar'
-          })
+          expect(@qb.build[:body]).to eq(foo: 'bar')
         end
 
         it 'should be aliased to body' do
           @qb.body(foo: 'bar')
 
-          expect(@qb.build[:body]).to eq({
-            foo: 'bar'
-          })
+          expect(@qb.build[:body]).to eq(foo: 'bar')
         end
 
         it 'should drop nil values from the data hash' do

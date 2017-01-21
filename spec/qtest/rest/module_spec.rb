@@ -23,12 +23,10 @@ module QTest
 
       it 'should get a module by id with descendants expanded' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/modules/2')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'expand' => 'descendants'
-            }
-          })
+          .with(headers: { 'Authorization' => 'foobar' },
+                query: {
+                  'expand' => 'descendants'
+                })
           .to_return(status: 200, body: '{}')
 
         project_module = @client.module(project: 1,
@@ -40,12 +38,10 @@ module QTest
 
       it 'should search for modules by name' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/modules')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'search' => 'foo'
-            }
-          })
+          .with(headers: { 'Authorization' => 'foobar' },
+                query: {
+                  'search' => 'foo'
+                })
           .to_return(status: 200, body: '[{}, {}]')
 
         project_modules = @client.modules(project: 1, search: 'foo')
@@ -55,9 +51,7 @@ module QTest
 
       it 'should get all modules under root' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/modules')
-          .with({
-            headers: { 'Authorization' => 'foobar' }
-          })
+          .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '[{}, {}]')
 
         project_modules = @client.modules(project: 1)
@@ -67,12 +61,10 @@ module QTest
 
       it 'should get all modules under a parent' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/modules')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'parentId' => 5
-            }
-          })
+          .with(headers: { 'Authorization' => 'foobar' },
+                query: {
+                  'parentId' => 5
+                })
           .to_return(status: 200, body: '[{}]')
 
         expect(@client.modules(project: 1, module: 5)).to eq([{}])
@@ -80,13 +72,11 @@ module QTest
 
       it 'should get all modules with descendants expanded' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/modules')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'parentId' => 5,
-              'expand' => 'descendants'
-            }
-          })
+          .with(headers: { 'Authorization' => 'foobar' },
+                query: {
+                  'parentId' => 5,
+                  'expand' => 'descendants'
+                })
           .to_return(status: 200, body: '[{}]')
 
         project_modules = @client.modules(project: 1,

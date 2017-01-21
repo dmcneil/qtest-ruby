@@ -6,7 +6,7 @@ module QTest
       def method_missing(name, *args, &block)
         if name == :client
           raise QTest::Error,
-          'No QTest::Client found. Create one using QTest::Client.new first.'
+                'No QTest::Client found. Create one using QTest::Client.new first.'
         else
           super
         end
@@ -56,13 +56,13 @@ module QTest
         key_iv = :"@#{key}"
         next if key_iv == self_iv
         if resource.instance_variable_defined?(key_iv)
-          original = self.instance_variable_get(key_iv)
+          original = instance_variable_get(key_iv)
           resource.instance_variable_set(key_iv, original)
         end
       end
     end
 
-    def methodize(type, opts = {})
+    def methodize(type, _opts = {})
       type.to_s.demodulize.underscore
     end
   end

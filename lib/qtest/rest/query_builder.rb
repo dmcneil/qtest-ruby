@@ -12,7 +12,7 @@ module QTest
         :test_run,
         :test_step,
         :module
-      ]
+      ].freeze
 
       def initialize(*opts)
         RESOURCES.each do |resource|
@@ -38,7 +38,7 @@ module QTest
       end
 
       def with(*paths)
-        paths.map! { |path| path.to_s.gsub('_', '-') }
+        paths.map! { |path| path.to_s.tr('_', '-') }
 
         @path << paths
         self
@@ -53,7 +53,7 @@ module QTest
 
         self
       end
-      alias_method :under, :parent
+      alias under parent
 
       def header(key, value)
         key = encode_for_header(key)
@@ -67,7 +67,7 @@ module QTest
 
         self
       end
-      alias_method :body, :data
+      alias body data
 
       def param(key, value)
         @query[key.to_s] = value

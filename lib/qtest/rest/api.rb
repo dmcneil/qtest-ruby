@@ -20,7 +20,7 @@ module QTest
       include QTest::REST::TestCase
       include QTest::REST::Module
 
-      BASE_PATH = '/api/v3'
+      BASE_PATH = '/api/v3'.freeze
 
       def self.included(base)
         base.include HTTParty
@@ -41,12 +41,12 @@ module QTest
       # @return [String] authorization token
       def auth(opts = {})
         query = QueryBuilder.new
-                .options(:without_api_path)
-                .with('/api/login')
-                .header(:content_type, 'application/x-www-form-urlencoded')
-                .data(j_username: opts[:username])
-                .data(j_password: opts[:password])
-                .build
+                            .options(:without_api_path)
+                            .with('/api/login')
+                            .header(:content_type, 'application/x-www-form-urlencoded')
+                            .data(j_username: opts[:username])
+                            .data(j_password: opts[:password])
+                            .build
 
         @token = post(query, raw: true)
         self.class.send(:headers, 'Authorization' => @token)
@@ -56,9 +56,9 @@ module QTest
 
       def fields(opts = {})
         query = QueryBuilder.new
-                .project(opts[:project])
-                .with(:settings, opts[:type], :fields)
-                .build
+                            .project(opts[:project])
+                            .with(:settings, opts[:type], :fields)
+                            .build
 
         get(query)
       end

@@ -3,23 +3,19 @@ module Z; end
 class Z::Foo < QTest::Base
   attr_accessor :project
 
-  def initialize(opts = {})
+  def initialize(_opts = {})
     @id = 1
-    @project = "project"
+    @project = 'project'
   end
 
-  def bars(opts = {})
-    all(Z::Bar, {
-      foo: @id,
-      project: @project
-    })
+  def bars(_opts = {})
+    all(Z::Bar, foo: @id,
+                project: @project)
   end
 
-  def bar(opts = {})
-    unique(Z::Bar, {
-      foo: @id,
-      project: @project
-    })
+  def bar(_opts = {})
+    unique(Z::Bar, foo: @id,
+                   project: @project)
   end
 
   def create_bar(opts = {})
@@ -37,19 +33,19 @@ class Z::Bar
 end
 
 class StubClient < QTest::Client
-  def foos(opts = {})
+  def foos(_opts = {})
     [{}]
   end
 
-  def bars(opts = {})
+  def bars(_opts = {})
     [{}]
   end
 
-  def bar(opts = {})
+  def bar(_opts = {})
     {}
   end
 
-  def create_bar(opts = {})
+  def create_bar(_opts = {})
     {}
   end
 end
@@ -75,9 +71,9 @@ module QTest
     end
 
     it 'should transfer types in the opts to the new type' do
-      bazs = @foo.bars(project: "not_nil")
+      bazs = @foo.bars(project: 'not_nil')
 
-      expect(bazs.first.project).to eq "project"
+      expect(bazs.first.project).to eq 'project'
     end
 
     it 'should get a single, unique type' do

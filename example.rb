@@ -16,6 +16,4 @@ test_run = test_suite.test_runs.select { |tr| tr.id = 5677 }.first
 
 # test_cycle.create_test_suite(name: 'Automation Test')
 
-binding.pry
-
 puts 'Done'

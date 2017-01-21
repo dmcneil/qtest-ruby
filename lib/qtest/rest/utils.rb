@@ -13,7 +13,7 @@ module QTest
         handle_response(self.class.put(query[:path], query), opts)
       end
 
-      def delete(query, opts = {})
+      def delete(query, _opts = {})
         handle_response(self.class.delete(query[:path], query), raw: true)
       end
 

@@ -131,14 +131,12 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-        test_cycle = @client.update_test_cycle({
-          id: 9,
-          project: 1,
-          attributes: {
-            name: 'New name',
-            description: 'New description'
-          }
-        })
+        test_cycle = @client.update_test_cycle(id: 9,
+                                               project: 1,
+                                               attributes: {
+                                                 name: 'New name',
+                                                 description: 'New description'
+                                               })
 
         expect(test_cycle).to eq({})
       end

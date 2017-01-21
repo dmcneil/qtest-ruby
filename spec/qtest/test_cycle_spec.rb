@@ -33,13 +33,11 @@ module QTest
 
       it 'should create a test cycle' do
         expect(@client).to receive(:create_test_cycle)
-          .with({
-            project: 1,
-            test_cycle: 4,
-            attributes: {
-              name: 'Foo'
-            }
-          })
+          .with(project: 1,
+                test_cycle: 4,
+                attributes: {
+                  name: 'Foo'
+                })
           .and_return({})
 
         test_cycle = @test_cycle.create_test_cycle(name: 'Foo')
@@ -74,13 +72,11 @@ module QTest
 
       it 'should create a test suite' do
         expect(@client).to receive(:create_test_suite)
-          .with({
-            project: 1,
-            test_cycle: 4,
-            attributes: {
-              name: 'Foo'
-            }
-          })
+          .with(project: 1,
+                test_cycle: 4,
+                attributes: {
+                  name: 'Foo'
+                })
           .and_return({})
 
         test_suite = @test_cycle.create_test_suite(name: 'Foo')

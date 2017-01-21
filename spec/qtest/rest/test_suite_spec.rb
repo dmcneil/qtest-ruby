@@ -94,7 +94,7 @@ module QTest
             body: {
               name: 'Release 1',
               properties: [],
-              target_build_id: 123,
+              target_build_id: 123
             }.to_json
           )
           .to_return(status: 200, body: '{}')
@@ -125,13 +125,11 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-          test_suite = @client.move_test_suite({
-            project: 1,
-            id: 2,
-            test_cycle: 5
-          })
+        test_suite = @client.move_test_suite(project: 1,
+                                             id: 2,
+                                             test_cycle: 5)
 
-          expect(test_suite).to eq({})
+        expect(test_suite).to eq({})
       end
 
       it 'should move a test suite to another release' do
@@ -147,13 +145,11 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-          test_suite = @client.move_test_suite({
-            project: 1,
-            id: 2,
-            release: 5
-          })
+        test_suite = @client.move_test_suite(project: 1,
+                                             id: 2,
+                                             release: 5)
 
-          expect(test_suite).to eq({})
+        expect(test_suite).to eq({})
       end
 
       it 'should update a test suite' do
@@ -173,19 +169,17 @@ module QTest
           )
           .to_return(status: 200, body: '{}')
 
-        test_suite = @client.update_test_suite({
-          project: 1,
-          id: 2,
-          attributes: {
-            name: 'New name',
-            properties: [
-              {
-                field_id: 1,
-                field_value: 'New value'
-              }
-            ]
-          }
-        })
+        test_suite = @client.update_test_suite(project: 1,
+                                               id: 2,
+                                               attributes: {
+                                                 name: 'New name',
+                                                 properties: [
+                                                   {
+                                                     field_id: 1,
+                                                     field_value: 'New value'
+                                                   }
+                                                 ]
+                                               })
 
         expect(test_suite).to eq({})
       end

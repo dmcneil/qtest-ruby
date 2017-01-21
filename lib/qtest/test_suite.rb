@@ -20,12 +20,10 @@ module QTest
     #
     # @return [QTest::TestSuite]
     def move_to(opts = {})
-      move({
-        project: @project.id,
-        test_suite: @id,
-        release: opts[:release],
-        test_cycle: opts[:test_cycle]
-      })
+      move(project: @project.id,
+           test_suite: @id,
+           release: opts[:release],
+           test_cycle: opts[:test_cycle])
 
       if opts[:release]
         @release = unique(QTest::Release,
@@ -39,6 +37,6 @@ module QTest
 
       self
     end
-    alias_method :move_under, :move_to
+    alias move_under move_to
   end
 end

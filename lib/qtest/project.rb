@@ -4,7 +4,7 @@ module QTest
       def find_by(opts = {})
         project = client.project(id: opts[:id]) if opts[:id]
 
-        self.new(project)
+        new(project)
       end
     end
 

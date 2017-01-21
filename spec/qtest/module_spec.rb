@@ -36,12 +36,12 @@ module QTest
         .with(project: 1, module: 2, search: 'foo')
         .and_return([{}])
 
-     project_modules = @project_module.child_modules(search: 'foo')
+      project_modules = @project_module.child_modules(search: 'foo')
 
-     expect(project_modules).to be_a Array
-     expect(project_modules.first).to be_a QTest::Module
-     expect(project_modules.first.project).to eq @project
-     expect(project_modules.first.module).to eq @project_module
+      expect(project_modules).to be_a Array
+      expect(project_modules.first).to be_a QTest::Module
+      expect(project_modules.first.project).to eq @project
+      expect(project_modules.first.module).to eq @project_module
     end
 
     it 'should get all test cases' do

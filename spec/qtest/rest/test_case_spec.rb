@@ -7,7 +7,6 @@ class Foo
   headers 'Authorization' => 'foobar'
 end
 
-
 module QTest
   module REST
     describe TestCase do
@@ -25,12 +24,10 @@ module QTest
 
       it 'should get all test cases under a module' do
         stub_request(:get, 'http://www.foo.com/api/v3/projects/1/test-cases')
-          .with({
-            headers: { 'Authorization' => 'foobar' },
-            query: {
-              'parentId' => 1
-            }
-          })
+          .with(headers: { 'Authorization' => 'foobar' },
+                query: {
+                  'parentId' => 1
+                })
           .to_return(status: 200, body: '[{}]')
 
         expect(@client.test_cases(project: 1, module: 1)).to eq([{}])
@@ -38,7 +35,7 @@ module QTest
 
       it 'should get a specific version of a test case' do
         stub_request(:get,
-            'http://www.foo.com/api/v3/projects/1/test-cases/2/versions/3')
+                     'http://www.foo.com/api/v3/projects/1/test-cases/2/versions/3')
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
@@ -48,7 +45,7 @@ module QTest
 
       it 'should get all versions of a test case' do
         stub_request(:get,
-            'http://www.foo.com/api/v3/projects/1/test-cases/2/versions')
+                     'http://www.foo.com/api/v3/projects/1/test-cases/2/versions')
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '[{}]')
 
@@ -58,7 +55,7 @@ module QTest
 
       it 'should get a test step by id' do
         stub_request(:get,
-            'http://www.foo.com/api/v3/projects/1/test-cases/2/test-steps/3')
+                     'http://www.foo.com/api/v3/projects/1/test-cases/2/test-steps/3')
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '{}')
 
@@ -68,7 +65,7 @@ module QTest
 
       it 'should get all test case fields' do
         stub_request(:get,
-            'http://www.foo.com/api/v3/projects/1/settings/test-cases/fields')
+                     'http://www.foo.com/api/v3/projects/1/settings/test-cases/fields')
           .with(headers: { 'Authorization' => 'foobar' })
           .to_return(status: 200, body: '[{}]')
 

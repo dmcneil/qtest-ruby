@@ -22,7 +22,7 @@ module QTest
           search: opts[:search])
     end
 
-    def test_cases(opts = {})
+    def test_cases(_opts = {})
       all(QTest::TestCase,
           project: @project.id,
           module: @id)
