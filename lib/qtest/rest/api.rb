@@ -63,6 +63,28 @@ module QTest
 
         get(query)
       end
+
+      def all(type, opts = {})
+        self.send(methodize(type).pluralize, opts)
+      end
+
+      def unique(type, opts = {})
+        self.send(methodize(type), opts)
+      end
+
+      def create(type, opts = {})
+        self.send("create_#{methodize(type)}", opts)
+      end
+
+      def move(type, opts = {})
+        self.send("move_#{methodize(type)}", opts)
+      end
+
+      private
+
+      def methodize(type)
+        type.to_s.demodulize.underscore
+      end
     end
   end
 end

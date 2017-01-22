@@ -16,24 +16,24 @@ module QTest
     protected
 
     def all(type, opts = {})
-      attributes = client.send(methodize(type).pluralize, opts)
+      attributes = client.all(type, opts)
       attributes.map do |attribute|
         to_type(type, attribute, opts)
       end
     end
 
     def unique(type, opts = {})
-      attributes = client.send(methodize(type), opts)
+      attributes = client.unique(type, opts)
       to_type(type, attributes, opts)
     end
 
     def create(type, opts = {})
-      attributes = client.send("create_#{methodize(type)}", opts)
+      attributes = client.create(type, opts)
       to_type(type, attributes, opts)
     end
 
     def move(opts = {})
-      attributes = client.send("move_#{methodize(self.class)}", opts)
+      attributes = client.move(self.class, opts)
       to_type(self.class, attributes, opts)
     end
 
@@ -42,8 +42,6 @@ module QTest
     def to_type(type, attributes, opts = {})
       resource = type.new(attributes)
       transfer_relationships(resource, opts)
-
-      resource
     end
 
     def transfer_relationships(resource, opts = {})
@@ -60,10 +58,8 @@ module QTest
           resource.instance_variable_set(key_iv, original)
         end
       end
-    end
 
-    def methodize(type, _opts = {})
-      type.to_s.demodulize.underscore
+      resource
     end
   end
 end
