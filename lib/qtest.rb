@@ -14,8 +14,7 @@ require_relative 'qtest/rest/api'
 require_relative 'qtest/rest/query_builder'
 require_relative 'qtest/client'
 
-require_relative 'qtest/errors/error'
-require_relative 'qtest/errors/authorization_error'
-
 module QTest
+  class Error < StandardError; end
+  class AuthorizationError < Error; end
 end

@@ -43,7 +43,8 @@ module QTest
         query = QueryBuilder.new
                             .options(:without_api_path)
                             .with('/api/login')
-                            .header(:content_type, 'application/x-www-form-urlencoded')
+                            .header(:content_type,
+                                    'application/x-www-form-urlencoded')
                             .data(j_username: opts[:username])
                             .data(j_password: opts[:password])
                             .build

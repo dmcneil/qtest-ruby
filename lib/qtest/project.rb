@@ -16,10 +16,8 @@ module QTest
 
     # Get a specific Release under the Project.
     #
-    # ## Options
-    #
-    #     * :id - the Release ID
-    #
+    # @param opts [Hash]
+    # @option id [Integer] id of the Release
     # @return [QTest::Release]
     def release(opts = {})
       unique(QTest::Release, project: @id, id: opts[:id])
@@ -34,10 +32,8 @@ module QTest
 
     # Get a specific Module under the Project.
     #
-    # ## Options
-    #
-    #     * :id - the Module ID
-    #
+    # @param opts [Hash]
+    # @option id [Integer] id of the Module
     # @return [QTest::Module]
     def module(opts = {})
       unique(QTest::Module, project: @id, id: opts[:id])

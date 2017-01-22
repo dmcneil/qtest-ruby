@@ -12,6 +12,11 @@ module QTest
       @test_run = opts[:test_run]
     end
 
+    # Get a specific Test Step under the Test Case.
+    #
+    # @param opts [Hash]
+    # @option id [Integer] id of the Test Step
+    # @return [QTest::TestStep]
     def step(opts = {})
       unique(QTest::TestStep,
              project: @project.id,
@@ -19,6 +24,9 @@ module QTest
              id: opts[:id])
     end
 
+    # Get all Test Steps under the Test Case.
+    #
+    # @return [Array[QTest::TestStep]]
     def steps
       all(QTest::TestStep, project: @project.id, test_case: @id)
     end
