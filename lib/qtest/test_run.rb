@@ -14,6 +14,11 @@ module QTest
     #
     # @return [Hash]
     def submit_test_log(opts = {})
+      opts[:status] = client.execution_statuses(project: @project.id)
+                            .select do |status|
+                              status[:name].downcase.to_sym == opts[:status]
+                            end.first
+
       client.submit_test_log(project: @project.id,
                              test_run: @id,
                              attributes: opts)

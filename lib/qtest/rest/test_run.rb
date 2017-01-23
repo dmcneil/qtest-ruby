@@ -72,13 +72,15 @@ module QTest
       end
 
       def execution_statuses(opts = {})
+        return @execution_statuses if @execution_statuses
+
         query = QueryBuilder.new
                             .project(opts[:project])
                             .test_runs
                             .with('execution-statuses')
                             .build
 
-        get(query)
+        @execution_statuses = get(query)
       end
 
       def test_run_fields(opts = {})
