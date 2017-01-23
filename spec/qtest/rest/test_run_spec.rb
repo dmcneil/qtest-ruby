@@ -237,6 +237,27 @@ module QTest
 
         expect(fields).to eq([{}, {}])
       end
+
+      it 'should submit a test log' do
+        stub_request(:post, 'http://www.foo.com/api/v3/projects/1/test-runs/4/test-logs')
+          .with(
+            headers: { 'Authorization' => 'foobar' },
+            body: {
+              status: { id: 600 },
+              exe_start_date: 'Now',
+              exe_end_date: 'Then'
+            }.to_json
+          )
+          .to_return(status: 200, body: '{}')
+
+        expect(@client.submit_test_log(project: 1,
+                                       test_run: 4,
+                                       attributes: {
+                                         status: { id: 600 },
+                                         exe_start_date: 'Now',
+                                         exe_end_date: 'Then'
+                                       })).to eq({})
+      end
     end
   end
 end

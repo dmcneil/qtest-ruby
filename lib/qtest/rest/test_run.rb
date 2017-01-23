@@ -90,6 +90,18 @@ module QTest
 
         get(query)
       end
+
+      def submit_test_log(opts = {})
+        query = QueryBuilder.new
+                            .options(:json)
+                            .project(opts[:project])
+                            .test_run(opts[:test_run])
+                            .with('test-logs')
+                            .data(opts[:attributes])
+                            .build
+
+        post(query)
+      end
     end
   end
 end
