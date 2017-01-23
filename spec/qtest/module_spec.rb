@@ -56,5 +56,29 @@ module QTest
       expect(test_cases.first.project).to eq @project
       expect(test_cases.first.module).to eq @project_module
     end
+
+    it 'should create a test case' do
+      expect(@client).to receive(:create_test_case)
+        .with(
+          project: 1,
+          module: 2,
+          attributes: {
+            name: 'Foo',
+            description: 'Bar',
+            properties: [],
+            test_steps: []
+          }
+        )
+        .and_return({})
+
+      test_case = @project_module.create_test_case(name: 'Foo',
+                                                   description: 'Bar',
+                                                   properties: [],
+                                                   test_steps: [])
+
+      expect(test_case).to be_a QTest::TestCase
+      expect(test_case.project).to eq @project
+      expect(test_case.module).to eq @project_module
+    end
   end
 end

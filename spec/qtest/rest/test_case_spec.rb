@@ -71,6 +71,38 @@ module QTest
 
         expect(@client.fields(project: 1, type: :test_cases)).to eq([{}])
       end
+
+      it 'should create a test case under a Module' do
+        stub_request(:post,
+                     'http://www.foo.com/api/v3/projects/1/test-cases')
+          .with(
+            headers: {
+              'Authorization' => 'foobar',
+              'Content-Type' => 'application/json'
+            },
+            body: {
+              name: 'Foo',
+              description: 'Create a Foo test case',
+              properties: [],
+              test_steps: [],
+              parent_id: 3
+            }
+          )
+          .to_return(status: 200, body: '{}')
+
+        test_case = {
+          project: 1,
+          module: 3,
+          attributes: {
+            name: 'Foo',
+            description: 'Create a Foo test case',
+            properties: [],
+            test_steps: []
+          }
+        }
+
+        expect(@client.create_test_case(test_case)).to eq({})
+      end
     end
   end
 end

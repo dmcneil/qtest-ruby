@@ -40,5 +40,20 @@ module QTest
           project: @project.id,
           module: @id)
     end
+
+    # Create a Test Case under the Module.
+    #
+    # @param opts [Hash]
+    # @option name [String]
+    # @option description [String]
+    # @option properties [Array]
+    # @option test_steps [Array]
+    # @return [QTest::TestCase]
+    def create_test_case(opts = {})
+      create(QTest::TestCase,
+             project: @project.id,
+             module: @id,
+             attributes: opts)
+    end
   end
 end

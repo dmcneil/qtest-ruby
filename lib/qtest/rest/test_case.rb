@@ -25,6 +25,21 @@ module QTest
         get(query)
       end
 
+      def create_test_case(opts = {})
+        if opts[:attributes]
+          opts[:attributes].merge!(parent_id: opts[:module])
+        end
+
+        query = QueryBuilder.new
+                            .options(:json)
+                            .project(opts[:project])
+                            .test_cases
+                            .data(opts[:attributes])
+                            .build
+
+        post(query)
+      end
+
       def test_case_version(opts = {})
         query = QueryBuilder.new
                             .project(opts[:project])
