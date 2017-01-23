@@ -9,6 +9,54 @@ module QTest
       @release = QTest::Release.new(id: 5, project: @project)
     end
 
+    describe 'attributes' do
+      it 'has an id' do
+        expect(QTest::Release.new(id: 1).id).to eq(1)
+      end
+
+      it 'has a name' do
+        expect(QTest::Release.new(name: 'Foo').name).to eq('Foo')
+      end
+
+      it 'has an order' do
+        expect(QTest::Release.new(order: 3).order).to eq(3)
+      end
+
+      it 'has a pid' do
+        expect(QTest::Release.new(pid: 'RL-1').pid).to eq('RL-1')
+      end
+
+      it 'aliases tag for pid' do
+        expect(QTest::Release.new(pid: 'RL-1').tag).to eq('RL-1')
+      end
+
+      it 'has properties' do
+        expect(QTest::Release.new(properties: []).properties).to eq([])
+      end
+
+      it 'has a web_url' do
+        release = QTest::Release.new(web_url: 'http://www.foo.com')
+        expect(release.web_url).to eq('http://www.foo.com')
+      end
+
+      it 'aliases url for web_url' do
+        release = QTest::Release.new(web_url: 'http://www.foo.com')
+        expect(release.url).to eq('http://www.foo.com')
+      end
+
+      it 'has a start date as a Time' do
+        now_to_s = Time.now.to_s
+        release = QTest::Release.new(start_date: now_to_s)
+        expect(release.start_date).to be_a(Time)
+      end
+
+      it 'has an end date' do
+        now_to_s = Time.now.to_s
+        release = QTest::Release.new(end_date: now_to_s)
+        expect(release.end_date).to be_a(Time)
+      end
+    end
+
     describe 'test cycles' do
       before do
         @test_cycle = QTest::TestCycle.new(id: 6)

@@ -13,6 +13,14 @@ module QTest
       end
     end
 
+    def initialize(opts = {})
+      opts.each do |key, value|
+        if self.respond_to?("#{key}=")
+          self.send(:"#{key}=", value)
+        end
+      end
+    end
+
     protected
 
     def all(type, opts = {})

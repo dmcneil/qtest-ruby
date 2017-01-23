@@ -7,24 +7,59 @@ module QTest
     end
 
     describe 'attributes' do
-      it 'should have an id' do
+      it 'has an id' do
         test_case = QTest::TestCase.new(id: 1)
-        expect(test_case.id).to eq 1
+        expect(test_case.id).to eq(1)
       end
 
-      it 'should have a name' do
+      it 'has a name' do
         test_case = QTest::TestCase.new(name: 'Foo')
-        expect(test_case.name).to eq 'Foo'
+        expect(test_case.name).to eq('Foo')
       end
 
-      it 'should have a tag' do
-        test_case = QTest::TestCase.new(tag: 'TC-FOO')
-        expect(test_case.tag).to eq 'TC-FOO'
+      it 'has a description' do
+        test_case = QTest::TestCase.new(description: 'Foo')
+        expect(test_case.description).to eq('Foo')
       end
 
-      it 'should accept the :pid option for a tag' do
+      it 'has a precondition' do
+        test_case = QTest::TestCase.new(precondition: 'Foo')
+        expect(test_case.precondition).to eq('Foo')
+      end
+
+      it 'has an order' do
+        test_case = QTest::TestCase.new(order: 1)
+        expect(test_case.order).to eq(1)
+      end
+
+      it 'has a pid' do
         test_case = QTest::TestCase.new(pid: 'TC-FOO')
-        expect(test_case.tag).to eq 'TC-FOO'
+        expect(test_case.pid).to eq('TC-FOO')
+      end
+
+      it 'aliases tag for pid' do
+        test_case = QTest::TestCase.new(pid: 'TC-FOO')
+        expect(test_case.tag).to eq('TC-FOO')
+      end
+
+      it 'has a web_url' do
+        test_case = QTest::TestCase.new(web_url: 'http://www.foo.com')
+        expect(test_case.web_url).to eq('http://www.foo.com')
+      end
+
+      it 'aliases url for web_url' do
+        test_case = QTest::TestCase.new(web_url: 'http://www.foo.com')
+        expect(test_case.url).to eq('http://www.foo.com')
+      end
+
+      it 'has a test_case_version_id' do
+        test_case = QTest::TestCase.new(test_case_version_id: 3)
+        expect(test_case.test_case_version_id).to eq(3)
+      end
+
+      it 'aliases version for test_case_version_id' do
+        test_case = QTest::TestCase.new(test_case_version_id: 3)
+        expect(test_case.version).to eq(3)
       end
     end
 

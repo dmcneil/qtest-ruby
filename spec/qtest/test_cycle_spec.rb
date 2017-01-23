@@ -1,12 +1,41 @@
-class StubClient < QTest::Client
-end
-
 module QTest
   describe TestCycle do
     before do
-      @client = StubClient.new
+      @client = QTest::Client.new
       @project = QTest::Project.new(id: 1)
       @test_cycle = QTest::TestCycle.new(id: 4, project: @project)
+    end
+
+    describe 'attributes' do
+      it 'has an id' do
+        test_cycle = QTest::TestCycle.new(id: 1)
+        expect(test_cycle.id).to eq(1)
+      end
+
+      it 'has a description' do
+        test_cycle = QTest::TestCycle.new(description: 'Foo')
+        expect(test_cycle.description).to eq('Foo')
+      end
+
+      it 'has an order' do
+        test_cycle = QTest::TestCycle.new(order: 5)
+        expect(test_cycle.order).to eq(5)
+      end
+
+      it 'has a pid' do
+        test_cycle = QTest::TestCycle.new(pid: 'CL-1')
+        expect(test_cycle.pid).to eq('CL-1')
+      end
+
+      it 'aliases tag for pid' do
+        test_cycle = QTest::TestCycle.new(pid: 'CL-1')
+        expect(test_cycle.tag).to eq('CL-1')
+      end
+
+      it 'has a url' do
+        test_cycle = QTest::TestCycle.new(web_url: 'http://www.foo.com')
+        expect(test_cycle.web_url).to eq('http://www.foo.com')
+      end
     end
 
     describe 'test cycles' do

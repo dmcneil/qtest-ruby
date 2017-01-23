@@ -1,10 +1,24 @@
 module QTest
   class Release < QTest::Base
-    attr_accessor :id, :project
+    attr_accessor :id, :name, :order, :pid, :properties, :web_url, :project
+    attr_reader :start_date, :end_date
+
+    alias tag pid
+    alias url web_url
 
     def initialize(opts = {})
+      super
+
       @id = opts[:id]
       @project = opts[:project]
+    end
+
+    def start_date=(start_date)
+      @start_date = Time.parse(start_date)
+    end
+
+    def end_date=(end_date)
+      @end_date = Time.parse(end_date)
     end
 
     # Get all Test Cycles under the Release.

@@ -1,11 +1,14 @@
 module QTest
   class TestCase < QTest::Base
-    attr_accessor :id, :name, :tag, :project, :module, :test_run
+    attr_accessor :id, :name, :pid, :order, :web_url, :test_case_version_id,
+                  :precondition, :description, :project, :module, :test_run
+
+    alias tag pid
+    alias url web_url
+    alias version test_case_version_id
 
     def initialize(opts = {})
-      @id = opts[:id]
-      @name = opts[:name]
-      @tag = opts[:tag] || opts[:pid]
+      super
 
       @project = opts[:project]
       @module = opts[:module]
