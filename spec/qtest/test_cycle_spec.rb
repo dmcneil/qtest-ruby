@@ -100,6 +100,32 @@ module QTest
         expect(test_runs.first.test_cycle).to eq @test_cycle
         expect(test_runs.first.project).to eq @project
       end
+
+      it 'should create a test run' do
+        expect(@client).to receive(:create_test_run)
+          .with(
+            project: 1,
+            test_cycle: 4,
+            attributes: {
+              name: 'TR001',
+              test_case: {
+                id: 6,
+                test_case_version_id: 12345
+              }
+            }
+          )
+          .and_return({})
+
+        test_run = @test_cycle.create_test_run(name: 'TR001',
+                                               test_case: {
+                                                 id: 6,
+                                                 test_case_version_id: 12345
+                                               })
+
+        expect(test_run).to be_a QTest::TestRun
+        expect(test_run.project).to eq @project
+        expect(test_run.test_cycle).to eq @test_cycle
+      end
     end
   end
 end

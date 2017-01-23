@@ -33,6 +33,32 @@ module QTest
 
         expect(@test_suite.test_runs).to eq []
       end
+
+      it 'should create a test run' do
+        expect(@client).to receive(:create_test_run)
+          .with(
+            project: 1,
+            test_suite: 3,
+            attributes: {
+              name: 'TR001',
+              test_case: {
+                id: 6,
+                test_case_version_id: 12345
+              }
+            }
+          )
+          .and_return({})
+
+        test_run = @test_suite.create_test_run(name: 'TR001',
+                                               test_case: {
+                                                 id: 6,
+                                                 test_case_version_id: 12345
+                                               })
+
+        expect(test_run).to be_a QTest::TestRun
+        expect(test_run.project).to eq @project
+        expect(test_run.test_suite).to eq @test_suite
+      end
     end
 
     describe 'test suites' do

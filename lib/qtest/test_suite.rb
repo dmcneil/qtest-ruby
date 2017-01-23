@@ -16,6 +16,16 @@ module QTest
       all(QTest::TestRun, project: @project.id, test_suite: @id)
     end
 
+    # Create a Test Run under the Test Suite.
+    #
+    # @return [QTest::TestRun]
+    def create_test_run(opts = {})
+      create(QTest::TestRun,
+             project: @project.id,
+             test_suite: @id,
+             attributes: opts)
+    end
+
     # Move the Test Suite under a different parent.
     #
     # @return [QTest::TestSuite]

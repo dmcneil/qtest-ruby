@@ -40,6 +40,16 @@ module QTest
              attributes: opts)
     end
 
+    # Create a Test Run under the Test Cycle.
+    #
+    # @return [QTest::TestRun]
+    def create_test_run(opts = {})
+      create(QTest::TestRun,
+             project: @project.id,
+             test_cycle: @id,
+             attributes: opts)
+    end
+
     # Get all Test Runs under the Test Cycle.
     #
     # @return [Array[QTest::TestRun]]
