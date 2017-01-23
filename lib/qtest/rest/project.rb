@@ -10,7 +10,7 @@ module QTest
       end
 
       # GET '/projects'
-      def projects
+      def projects(_opts = {})
         query = QueryBuilder.new.projects.build
         get(query)
       end

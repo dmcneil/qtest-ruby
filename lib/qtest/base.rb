@@ -3,6 +3,24 @@ require 'active_support/inflector'
 module QTest
   class Base
     class << self
+      def find_by(opts = {})
+        return self.new(client.unique(self, opts)) if opts[:id]
+
+        response = client.all(self, opts)
+        return if response.empty?
+
+        response.each do |object|
+          opts.each do |opt_key, opt_value|
+            return self.new(object) if object[opt_key] == opt_value
+          end
+        end
+
+        if opts[:page]
+          opts[:page] += 1
+          find_by(opts)
+        end
+      end
+
       def method_missing(name, *args, &block)
         if name == :client
           raise QTest::Error,
@@ -10,6 +28,19 @@ module QTest
         else
           super
         end
+      end
+
+      private
+
+      def paginated_request(opts = {})
+        response = client.all(self.class, opts)
+        return if response.empty?
+
+        parsed_object = parse_response_for_object(response)
+        return parsed_object if parsed_object
+
+        opts[:page] += 1
+        paginated_request(opts)
       end
     end
 

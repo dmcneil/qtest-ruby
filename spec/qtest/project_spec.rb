@@ -7,18 +7,6 @@ module QTest
       @client = StubClient.new
     end
 
-    describe 'class methods' do
-      it 'should find by id' do
-        expect(@client).to receive(:project)
-          .with(id: 1)
-          .and_return({})
-
-        project = QTest::Project.find_by(id: 1)
-
-        expect(project).to be_a QTest::Project
-      end
-    end
-
     describe 'releases' do
       before do
         @project = QTest::Project.new(id: 1)

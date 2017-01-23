@@ -1,5 +1,12 @@
 module QTest
   class TestCase < QTest::Base
+    class << self
+      def find_by(opts = {})
+        opts[:page] ||= 1
+        super
+      end
+    end
+
     attr_accessor :id, :name, :pid, :order, :web_url, :test_case_version_id,
                   :precondition, :description, :project, :module, :test_run
 

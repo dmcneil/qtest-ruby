@@ -1,13 +1,5 @@
 module QTest
   class Project < Base
-    class << self
-      def find_by(opts = {})
-        project = client.project(id: opts[:id]) if opts[:id]
-
-        new(project)
-      end
-    end
-
     attr_accessor :id
 
     def initialize(opts = {})
