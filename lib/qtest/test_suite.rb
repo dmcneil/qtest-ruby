@@ -2,13 +2,6 @@ module QTest
   class TestSuite < QTest::Base
     attr_accessor :id, :project, :test_cycle, :release
 
-    def initialize(opts = {})
-      @id = opts[:id]
-      @project = opts[:project]
-      @test_cycle = opts[:test_cycle]
-      @release = opts[:release]
-    end
-
     # Get all Test Runs for the Test Suite.
     #
     # @return [Array[QTest::TestRun]]

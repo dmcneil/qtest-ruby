@@ -6,18 +6,6 @@ module QTest
     alias tag pid
     alias url web_url
 
-    def initialize(opts = {})
-      @id = opts[:id]
-      @description = opts[:description]
-      @order = opts[:order]
-      @pid = opts[:pid]
-      @web_url = opts[:web_url]
-
-      @project = opts[:project]
-      @test_cycle = opts[:test_cycle]
-      @release = opts[:release]
-    end
-
     # Get all Test Cycles under the Test Cycle.
     #
     # @return [Array[QTest::TestCycle]]

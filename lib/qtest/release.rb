@@ -6,13 +6,6 @@ module QTest
     alias tag pid
     alias url web_url
 
-    def initialize(opts = {})
-      super
-
-      @id = opts[:id]
-      @project = opts[:project]
-    end
-
     def start_date=(start_date)
       @start_date = Time.parse(start_date)
     end

@@ -2,12 +2,6 @@ module QTest
   class Module < QTest::Base
     attr_accessor :id, :project, :module
 
-    def initialize(opts = {})
-      @id = opts[:id]
-      @project = opts[:project]
-      @module = opts[:module]
-    end
-
     # Get a specific child Module under the Module.
     #
     # @param opts [Hash]

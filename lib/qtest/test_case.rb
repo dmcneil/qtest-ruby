@@ -14,14 +14,6 @@ module QTest
     alias url web_url
     alias version test_case_version_id
 
-    def initialize(opts = {})
-      super
-
-      @project = opts[:project]
-      @module = opts[:module]
-      @test_run = opts[:test_run]
-    end
-
     # Get a specific Test Step under the Test Case.
     #
     # @param opts [Hash]

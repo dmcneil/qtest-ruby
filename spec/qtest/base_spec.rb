@@ -19,7 +19,7 @@ class Z::Foo < QTest::Base
   end
 
   def create_bar(opts = {})
-    create(Z::Bar, opts)
+    create(Z::Bar, foo: @id, project: @project, attributes: opts)
   end
 end
 
@@ -84,35 +84,48 @@ module QTest
     end
 
     it 'should be able to get all resources of a type' do
-      foos = @foo.bars
+      expect(@client).to receive(:all)
+        .with(Z::Bar, foo: @foo.id, project: 'project')
+        .and_return([{}])
 
-      expect(foos).to be_a Array
-      expect(foos.first).to be_a Z::Bar
-    end
-
-    it 'should transfer the caller to the new type' do
       bars = @foo.bars
 
+      expect(bars).to be_a Array
+      expect(bars.first).to be_a Z::Bar
       expect(bars.first.foo).to eq @foo
-    end
-
-    it 'should transfer types in the opts to the new type' do
-      bazs = @foo.bars(project: 'not_nil')
-
-      expect(bazs.first.project).to eq 'project'
+      expect(bars.first.project).to eq @foo.project
     end
 
     it 'should get a single, unique type' do
+      expect(@client).to receive(:unique)
+        .with(Z::Bar, foo: @foo.id, project: 'project')
+        .and_return({})
+
       bar = @foo.bar
 
       expect(bar).to be_a Z::Bar
+      expect(bar.foo).to eq @foo
+      expect(bar.project).to eq @foo.project
     end
 
     it 'should create a new type' do
+      expect(@client).to receive(:create)
+        .with(
+          Z::Bar,
+          foo: @foo.id,
+          project: @foo.project,
+          attributes: {
+            name: 'foo',
+            description: 'bar'
+          }
+        )
+        .and_return({})
+
       bar = @foo.create_bar(name: 'foo', description: 'bar')
 
       expect(bar).to be_a Z::Bar
       expect(bar.foo).to eq @foo
+      expect(bar.project).to eq @foo.project
     end
   end
 end

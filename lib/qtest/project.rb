@@ -1,10 +1,6 @@
 module QTest
-  class Project < Base
+  class Project < QTest::Base
     attr_accessor :id
-
-    def initialize(opts = {})
-      @id = opts[:id]
-    end
 
     # Get a specific Release under the Project.
     #

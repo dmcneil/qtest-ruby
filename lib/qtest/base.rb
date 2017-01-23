@@ -29,19 +29,6 @@ module QTest
           super
         end
       end
-
-      private
-
-      def paginated_request(opts = {})
-        response = client.all(self.class, opts)
-        return if response.empty?
-
-        parsed_object = parse_response_for_object(response)
-        return parsed_object if parsed_object
-
-        opts[:page] += 1
-        paginated_request(opts)
-      end
     end
 
     def initialize(opts = {})
@@ -51,8 +38,6 @@ module QTest
         end
       end
     end
-
-    protected
 
     def all(type, opts = {})
       attributes = client.all(type, opts)
@@ -78,23 +63,24 @@ module QTest
 
     private
 
+    # @api private
     def to_type(type, attributes, opts = {})
       resource = type.new(attributes)
       transfer_relationships(resource, opts)
     end
 
+    # @api private
     def transfer_relationships(resource, opts = {})
-      self_iv = :"@#{self.class.to_s.demodulize.underscore}"
-      if resource.instance_variable_defined?(self_iv)
-        resource.instance_variable_set(self_iv, self)
+      self_class = self.class.to_s.demodulize.underscore.to_sym
+
+      if resource.respond_to?("#{self_class}=")
+        resource.send("#{self_class}=", self)
       end
 
       opts.each_key do |key|
-        key_iv = :"@#{key}"
-        next if key_iv == self_iv
-        if resource.instance_variable_defined?(key_iv)
-          original = instance_variable_get(key_iv)
-          resource.instance_variable_set(key_iv, original)
+        next if key == self_class
+        if resource.respond_to?("#{key}=")
+          resource.send("#{key}=", self.send(key))
         end
       end
 
